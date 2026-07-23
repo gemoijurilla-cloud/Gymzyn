@@ -28,6 +28,9 @@
         .btn-cart { background-color: #ff9800; color: white; }
         .btn-buy { background-color: #4CAF50; color: white; }
         
+        /* Itago muna ang ibang bahagi hangga't hindi pa pinipili o kino-click */
+        .hidden-step { display: none; }
+        
         .back-btn { display: inline-block; margin-top: 20px; padding: 8px 15px; background-color: #333; color: white; text-decoration: none; border-radius: 5px; font-size: 14px; }
     </style>
 </head>
@@ -41,79 +44,90 @@
     </nav>
 
     <div class="container">
+        <!-- 1. Listahan ng Produkto at Larawan -->
         <div class="product-info">
-            <!-- Image Tag para sa Produkto -->
-            <img id="display-image" src="" alt="Product Image" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: none;">
+            <label for="product-select" style="text-align: left; font-size: 15px;">Piliin ang Produkto:</label>
+            <select id="product-select" onchange="selectProduct()" style="padding: 10px; margin-bottom: 15px; font-weight: bold;"></select>
+
+            <img id="display-image" src="" alt="Product Image" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: none; border: 1px solid #ddd;">
             
-            <h2 id="display-title">Nag-loload ng Produkto...</h2>
-            <p id="display-desc">Sandali lamang habang kinukuha ang mga sukat at presyo.</p>
+            <h2 id="display-title" style="margin: 10px 0 5px 0;">Nag-loload ng Produkto...</h2>
+            <p id="display-desc" style="color: #666; font-size: 14px;">Sandali lamang habang kinukuha ang mga detalye.</p>
             <div id="display-wholesale" class="wholesale-badge"></div>
         </div>
 
-        <form action="#" method="POST">
+        <!-- Pindutan para lumabas ang Sukat/Uri -->
+        <button type="button" id="btn-show-options" onclick="showOptionsSection()" style="width: 100%; padding: 12px; background: #007BFF; color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 20px;">
+            Piliin ang Sukat / Uri (Multi-Product Selection) &darr;
+        </button>
+
+        <form action="#" id="checkout-form" method="POST">
             
-            <!-- Multi-Product / Size Dropdown na may Kaukulang Presyo -->
-            <div class="section">
-                <h3>Piliin ang Sukat / Uri (Multi-Product Selection):</h3>
+            <!-- Sukat / Uri Section (Naka-hide muna hanggang i-click ang button sa taas) -->
+            <div class="section hidden-step" id="section-variations">
+                <h3>Piliin ang Sukat / Uri:</h3>
                 <select id="product-variation" onchange="updatePrice()"></select>
+                <button type="button" onclick="proceedToCheckout()" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer;">
+                    Magpatuloy sa Checkout (Delivery & Payment) &darr;
+                </button>
             </div>
 
-            <!-- Delivery Details -->
-            <div class="section">
-                <h3>Delivery / Shipping Details</h3>
-                <label for="name">Buong Pangalan:</label>
-                <input type="text" id="name" placeholder="Juan Dela Cruz" required>
+            <!-- Delivery Details, Courier, Voucher, Payment at Summary (Naka-hide hanggang i-click ang proceed) -->
+            <div id="section-checkout-details" class="hidden-step">
                 
-                <label for="address">Kumpletong Address:</label>
-                <textarea id="address" rows="3" placeholder="Street, Barangay, City, Province" required></textarea>
-                
-                <label for="phone">Numero ng Telepono:</label>
-                <input type="tel" id="phone" placeholder="09123456789" required>
-            </div>
-
-            <!-- Courier at Shipping Fee -->
-            <div class="section">
-                <h3>Courier at Shipping Fee</h3>
-                <select id="courier" onchange="computeTotal()">
-                    <option value="50">J&T Express (Standard - ₱50)</option>
-                    <option value="60">Flash Express (Express - ₱60)</option>
-                    <option value="100">Ninja Van (Same Day - ₱100)</option>
-                </select>
-            </div>
-
-            <!-- Promo Voucher -->
-            <div class="section">
-                <h3>Promo Voucher (10% Off kung higit sa ₱1,000)</h3>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="voucher" placeholder="Ilagay ang voucher code" style="margin-bottom: 0;">
-                    <button type="button" onclick="applyVoucher()" style="padding: 8px 15px; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Apply</button>
+                <div class="section">
+                    <h3>Delivery / Shipping Details</h3>
+                    <label for="name">Buong Pangalan:</label>
+                    <input type="text" id="name" placeholder="Juan Dela Cruz">
+                    
+                    <label for="address">Kumpletong Address:</label>
+                    <textarea id="address" rows="3" placeholder="Street, Barangay, City, Province"></textarea>
+                    
+                    <label for="phone">Numero ng Telepono:</label>
+                    <input type="tel" id="phone" placeholder="09123456789">
                 </div>
-                <small id="voucher-message" style="display: block; margin-top: 5px;"></small>
-            </div>
 
-            <!-- Payment Method -->
-            <div class="section">
-                <h3>Payment Method</h3>
-                <select id="payment">
-                    <option value="cod">Cash on Delivery (COD)</option>
-                    <option value="gcash">GCash</option>
-                    <option value="maya">Maya</option>
-                    <option value="bank">Online Bank Transfer</option>
-                </select>
-            </div>
+                <div class="section">
+                    <h3>Courier at Shipping Fee</h3>
+                    <select id="courier" onchange="computeTotal()">
+                        <option value="50">J&T Express (Standard - ₱50)</option>
+                        <option value="60">Flash Express (Express - ₱60)</option>
+                        <option value="100">Ninja Van (Same Day - ₱100)</option>
+                    </select>
+                </div>
 
-            <!-- Order Summary -->
-            <div class="summary">
-                <h3>Order Summary</h3>
-                <p>Presyo ng Piniling Sukat: ₱<span id="price-display">0.00</span></p>
-                <p>Discount (10%): -₱<span id="discount-display">0.00</span></p>
-                <p>Shipping Fee: ₱<span id="shipping-display">50.00</span></p>
-                <p class="total-price">Kabuuang Babayaran: ₱<span id="total-display">0.00</span></p>
-            </div>
+                <div class="section">
+                    <h3>Promo Voucher (10% Off kung higit sa ₱1,000)</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="voucher" placeholder="Ilagay ang voucher code" style="margin-bottom: 0;">
+                        <button type="button" onclick="applyVoucher()" style="padding: 8px 15px; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Apply</button>
+                    </div>
+                    <small id="voucher-message" style="display: block; margin-top: 5px;"></small>
+                </div>
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-cart">Add to Cart</button>
-                <button type="submit" class="btn btn-buy">Buy / Checkout</button>
+                <div class="section">
+                    <h3>Payment Method</h3>
+                    <select id="payment">
+                        <option value="cod">Cash on Delivery (COD)</option>
+                        <option value="gcash">GCash</option>
+                        <option value="maya">Maya</option>
+                        <option value="bank">Online Bank Transfer</option>
+                    </select>
+                </div>
+
+                <div class="summary">
+                    <h3>Order Summary</h3>
+                    <p>Presyo ng Piniling Sukat: ₱<span id="price-display">0.00</span></p>
+                    <p>Discount (10%): -₱<span id="discount-display">0.00</span></p>
+                    <p>Shipping Fee: ₱<span id="shipping-display">50.00</span></p>
+                    <p class="total-price">Kabuuang Babayaran: ₱<span id="total-display">0.00</span></p>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-cart">Add to Cart</button>
+                    <button type="submit" class="btn btn-buy">Buy / Checkout</button>
+                </div>
+
             </div>
 
         </form>
@@ -121,7 +135,7 @@
         <a href="index.html" class="back-btn">&larr; Back to Home</a>
     </div>
 
-    <!-- JavaScript para sa pagbasa ng products.json at pagkalkula -->
+    <!-- JavaScript code -->
     <script>
         let currentProductPrice = 0;
         let discountRate = 0;
@@ -144,21 +158,11 @@
         }
 
         function renderProductSelector() {
-            let container = document.querySelector('.product-info');
-            
-            let selectProdHtml = `
-                <label for="product-select" style="margin-top: 15px; text-align: left;">Piliin ang Produkto:</label>
-                <select id="product-select" onchange="selectProduct()" style="padding: 8px; margin-bottom: 15px;">
-            `;
-            
+            let selectProdHtml = "";
             productsList.forEach((p, idx) => {
                 selectProdHtml += `<option value="${idx}">${p.name}</option>`;
             });
-            selectProdHtml += `</select>`;
-            
-            if(!document.getElementById('product-select')) {
-                container.insertAdjacentHTML('afterbegin', selectProdHtml);
-            }
+            document.getElementById('product-select').innerHTML = selectProdHtml;
             
             if(productsList.length > 0) {
                 displayProductDetails(0);
@@ -168,6 +172,10 @@
         function selectProduct() {
             const index = document.getElementById('product-select').value;
             displayProductDetails(index);
+            // I-reset ang mga nakatagong seksyon kapag nagpalit ng produkto
+            document.getElementById('section-variations').style.display = "none";
+            document.getElementById('section-checkout-details').style.display = "none";
+            document.getElementById('btn-show-options').style.display = "block";
         }
 
         function displayProductDetails(index) {
@@ -175,7 +183,6 @@
             document.getElementById('display-title').textContent = productData.name;
             document.getElementById('display-desc').textContent = productData.desc;
             
-            // Pagpapakita ng image
             const imgElem = document.getElementById('display-image');
             if (productData.image) {
                 imgElem.src = productData.image;
@@ -205,6 +212,17 @@
                 varSelect.appendChild(option);
             });
             computeTotal();
+        }
+
+        function showOptionsSection() {
+            document.getElementById('section-variations').style.display = "block";
+            document.getElementById('btn-show-options').style.display = "none";
+        }
+
+        function proceedToCheckout() {
+            document.getElementById('section-checkout-details').style.display = "block";
+            // I-scroll pababa papunta sa checkout details para madaling makita ng user
+            document.getElementById('section-checkout-details').scrollIntoView({ behavior: 'smooth' });
         }
 
         function updatePrice() {
@@ -260,7 +278,6 @@
             document.getElementById('total-display').textContent = finalTotal.toFixed(2);
         }
 
-        // Simulan ang pag-load ng data pagbukas ng pahina
         loadProductData();
 
         // Add to Cart Event Listener
@@ -291,7 +308,7 @@
         });
 
         // Buy / Checkout Event Listener
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.getElementById('checkout-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const name = document.getElementById('name').value;
