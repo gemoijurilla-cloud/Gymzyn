@@ -42,8 +42,10 @@
 
     <div class="container">
         <div class="product-info">
-            <h2 id="display-title">Nag-loload ng Produkto...</h2>
+            <!-- Image Tag para sa Produkto -->
             <img id="display-image" src="" alt="Product Image" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: none;">
+            
+            <h2 id="display-title">Nag-loload ng Produkto...</h2>
             <p id="display-desc">Sandali lamang habang kinukuha ang mga sukat at presyo.</p>
             <div id="display-wholesale" class="wholesale-badge"></div>
         </div>
@@ -119,85 +121,91 @@
         <a href="index.html" class="back-btn">&larr; Back to Home</a>
     </div>
 
-    <!-- Script na kumukuha ng data galing Admin Dashboard o GitHub products.json -->
+    <!-- JavaScript para sa pagbasa ng products.json at pagkalkula -->
     <script>
         let currentProductPrice = 0;
         let discountRate = 0;
         let activeVoucherCode = "DISCOUNT10";
         let productsList = [];
 
-    async function loadProductData() {
-        try {
-            const response = await fetch("products.json");
-            if (!response.ok) {
-                throw new Error("Hindi mabasa ang products.json");
+        async function loadProductData() {
+            try {
+                const response = await fetch("products.json");
+                if (!response.ok) {
+                    throw new Error("Hindi mabasa ang products.json");
+                }
+                productsList = await response.json();
+                renderProductSelector();
+            } catch (error) {
+                console.error("Error sa pag-load ng produkto:", error);
+                document.getElementById('display-title').textContent = "Default Item";
+                document.getElementById('display-desc').textContent = "Hindi ma-load ang detalye mula sa GitHub.";
             }
-            productsList = await response.json();
-            renderProductSelector();
-        } catch (error) {
-            console.error("Error sa pag-load ng produkto:", error);
-            document.getElementById('display-title').textContent = "Default Item";
-            document.getElementById('display-desc').textContent = "Hindi ma-load ang detalye mula sa GitHub.";
-        }
-    }
-
-    function renderProductSelector() {
-        // Gumawa tayo ng dropdown para sa pagpili ng produkto kung wala pa
-        let container = document.querySelector('.product-info');
-        
-        let selectProdHtml = `
-            <label for="product-select" style="margin-top: 15px; text-align: left;">Piliin ang Produkto:</label>
-            <select id="product-select" onchange="selectProduct()" style="padding: 8px; margin-bottom: 15px;">
-        `;
-        
-        productsList.forEach((p, idx) => {
-            selectProdHtml += `<option value="${idx}">${p.name}</option>`;
-        });
-        selectProdHtml += `</select>`;
-        
-        // I-insert sa ibabaw ng title kung gusto mo, o gamitin ang unang produkto muna
-        if(!document.getElementById('product-select')) {
-            container.insertAdjacentHTML('afterbegin', selectProdHtml);
-        }
-        
-        if(productsList.length > 0) {
-            displayProductDetails(0);
-        }
-    }
-
-    function selectProduct() {
-        const index = document.getElementById('product-select').value;
-        displayProductDetails(index);
-    }
-
-    function displayProductDetails(index) {
-        const productData = productsList[index];
-        document.getElementById('display-title').textContent = productData.name;
-        document.getElementById('display-desc').textContent = productData.desc;
-        activeVoucherCode = productData.voucher || "DISCOUNT10";
-        
-        const wholesaleElem = document.getElementById('display-wholesale');
-        if (productData.wholesale) {
-            wholesaleElem.textContent = productData.wholesale;
-            wholesaleElem.style.display = "block";
-        } else {
-            wholesaleElem.style.display = "none";
         }
 
-        const varSelect = document.getElementById('product-variation');
-        varSelect.innerHTML = ""; 
-        
-        productData.variations.forEach((v, idx) => {
-            const option = document.createElement('option');
-            option.value = v.price;
-            option.textContent = `${v.name} - ₱${v.price.toFixed(2)}`;
-            if(idx === 0) currentProductPrice = v.price;
-            varSelect.appendChild(option);
-        });
-        computeTotal();
-    }
+        function renderProductSelector() {
+            let container = document.querySelector('.product-info');
+            
+            let selectProdHtml = `
+                <label for="product-select" style="margin-top: 15px; text-align: left;">Piliin ang Produkto:</label>
+                <select id="product-select" onchange="selectProduct()" style="padding: 8px; margin-bottom: 15px;">
+            `;
+            
+            productsList.forEach((p, idx) => {
+                selectProdHtml += `<option value="${idx}">${p.name}</option>`;
+            });
+            selectProdHtml += `</select>`;
+            
+            if(!document.getElementById('product-select')) {
+                container.insertAdjacentHTML('afterbegin', selectProdHtml);
+            }
+            
+            if(productsList.length > 0) {
+                displayProductDetails(0);
+            }
+        }
 
-    loadProductData();
+        function selectProduct() {
+            const index = document.getElementById('product-select').value;
+            displayProductDetails(index);
+        }
+
+        function displayProductDetails(index) {
+            const productData = productsList[index];
+            document.getElementById('display-title').textContent = productData.name;
+            document.getElementById('display-desc').textContent = productData.desc;
+            
+            // Pagpapakita ng image
+            const imgElem = document.getElementById('display-image');
+            if (productData.image) {
+                imgElem.src = productData.image;
+                imgElem.style.display = "inline-block";
+            } else {
+                imgElem.style.display = "none";
+            }
+
+            activeVoucherCode = productData.voucher || "DISCOUNT10";
+            
+            const wholesaleElem = document.getElementById('display-wholesale');
+            if (productData.wholesale) {
+                wholesaleElem.textContent = productData.wholesale;
+                wholesaleElem.style.display = "block";
+            } else {
+                wholesaleElem.style.display = "none";
+            }
+
+            const varSelect = document.getElementById('product-variation');
+            varSelect.innerHTML = ""; 
+            
+            productData.variations.forEach((v, idx) => {
+                const option = document.createElement('option');
+                option.value = v.price;
+                option.textContent = `${v.name} - ₱${v.price.toFixed(2)}`;
+                if(idx === 0) currentProductPrice = v.price;
+                varSelect.appendChild(option);
+            });
+            computeTotal();
+        }
 
         function updatePrice() {
             const varSelect = document.getElementById('product-variation');
@@ -250,56 +258,55 @@
             document.getElementById('discount-display').textContent = discountAmount.toFixed(2);
             document.getElementById('shipping-display').textContent = shippingFee.toFixed(2);
             document.getElementById('total-display').textContent = finalTotal.toFixed(2);
-
-            // Function para sa Add to Cart button
-document.querySelector('.btn-cart').addEventListener('click', function() {
-    const varSelect = document.getElementById('product-variation');
-    const selectedText = varSelect.options[varSelect.selectedIndex].text;
-    const customerName = document.getElementById('name').value;
-
-    if (!customerName) {
-        alert('Mangyaring ilagay muna ang iyong buong pangalan sa Delivery Details.');
-        document.getElementById('name').focus();
-        return;
-    }
-
-    // Halimbawa ng pag-save sa localStorage para sa Cart
-    const cartItem = {
-        product: document.getElementById('display-title').textContent,
-        variation: selectedText,
-        price: currentProductPrice,
-        customer: customerName,
-        date: new Date().toISOString()
-    };
-
-    let cart = JSON.parse(localStorage.getItem('userCart')) || [];
-    cart.push(cartItem);
-    localStorage.setItem('userCart', JSON.stringify(cart));
-
-    alert('Matagumpay na naidagdag sa Cart ang produkto!');
-});
-
-// Function para sa Buy / Checkout button
-document.querySelector('form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Pigilan ang pag-refresh ng page
-
-    const name = document.getElementById('name').value;
-    const address = document.getElementById('address').value;
-    const phone = document.getElementById('phone').value;
-    const totalAmount = document.getElementById('total-display').textContent;
-    const paymentMethod = document.getElementById('payment').value;
-
-    if (!name || !address || !phone) {
-        alert('Mangyaring punan ang lahat ng kinakailangang impormasyon sa Delivery Details.');
-        return;
-    }
-
-    // Mensahe ng tagumpay o pagpapatuloy ng order
-    alert(`Maraming salamat sa iyong order, ${name}!\n\nKabuuang Babayaran: ₱${totalAmount}\nPayment Method: ${paymentMethod.toUpperCase()}\n\nAng iyong order ay naisumite na!`);
-    
-    // Dito mo rin pwedeng idagdag ang code para i-save sa database o i-redirect sa success page
-});
         }
+
+        // Simulan ang pag-load ng data pagbukas ng pahina
+        loadProductData();
+
+        // Add to Cart Event Listener
+        document.querySelector('.btn-cart').addEventListener('click', function() {
+            const varSelect = document.getElementById('product-variation');
+            const selectedText = varSelect.options[varSelect.selectedIndex].text;
+            const customerName = document.getElementById('name').value;
+
+            if (!customerName) {
+                alert('Mangyaring ilagay muna ang iyong buong pangalan sa Delivery Details.');
+                document.getElementById('name').focus();
+                return;
+            }
+
+            const cartItem = {
+                product: document.getElementById('display-title').textContent,
+                variation: selectedText,
+                price: currentProductPrice,
+                customer: customerName,
+                date: new Date().toISOString()
+            };
+
+            let cart = JSON.parse(localStorage.getItem('userCart')) || [];
+            cart.push(cartItem);
+            localStorage.setItem('userCart', JSON.stringify(cart));
+
+            alert('Matagumpay na naidagdag sa Cart ang produkto!');
+        });
+
+        // Buy / Checkout Event Listener
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const totalAmount = document.getElementById('total-display').textContent;
+            const paymentMethod = document.getElementById('payment').value;
+
+            if (!name || !address || !phone) {
+                alert('Mangyaring punan ang lahat ng kinakailangang impormasyon sa Delivery Details.');
+                return;
+            }
+
+            alert(`Maraming salamat sa iyong order, ${name}!\n\nKabuuang Babayaran: ₱${totalAmount}\nPayment Method: ${paymentMethod.toUpperCase()}\n\nAng iyong order ay naisumite na!`);
+        });
     </script>
 
 </body>
