@@ -46,6 +46,9 @@
         .summary p { margin: 5px 0; font-size: 14px; }
         .total-price { font-size: 17px; font-weight: bold; color: #d9534f; }
 
+        /* Hidden Checkout Section inside Cart initially */
+        #checkout-section { display: none; }
+
         .back-btn { display: inline-block; margin-top: 10px; padding: 8px 15px; background-color: #333; color: white; text-decoration: none; border-radius: 5px; font-size: 14px; }
     </style>
 </head>
@@ -58,19 +61,27 @@
         <button type="button" class="cart-icon-btn" onclick="openCartDrawer()">🛒 Cart (<span id="cart-count">0</span>)</button>
     </nav>
 
-    <!-- CART DRAWER / MODAL NA MAY SHIPPING, VOUCHER AT CHECKOUT DETAILS -->
+    <!-- CART DRAWER / MODAL -->
     <div id="cartDrawerModal" class="cart-modal">
         <div class="cart-content">
             <span class="close-cart" onclick="closeCartDrawer()">&times;</span>
-            <h3 style="margin-top: 0; color: #ff9800; border-bottom: 2px solid #ff9800; padding-bottom: 8px;">Shopping Cart & Checkout</h3>
+            <h3 id="cart-modal-title" style="margin-top: 0; color: #ff9800; border-bottom: 2px solid #ff9800; padding-bottom: 8px;">Ang iyong Shopping Cart</h3>
             
-            <!-- List ng mga in-add to cart -->
-            <div id="cart-items-container" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
-                <!-- Dito papasok ang items -->
+            <!-- 1. VIEW NG MGA PRODUCTS SA CART -->
+            <div id="cart-view-section">
+                <div id="cart-items-container" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
+                    <!-- Dito papasok ang items -->
+                </div>
+                <div style="font-weight: bold; text-align: right; font-size: 16px; margin-bottom: 15px;">
+                    Subtotal: ₱<span id="cart-drawer-subtotal">0.00</span>
+                </div>
+                <button type="button" class="btn btn-buy" style="width: 100%; font-size: 15px;" onclick="showCheckoutForm()">
+                    Proceed to Checkout
+                </button>
             </div>
 
-            <!-- CHECKOUT FORM SA LOOB NG CART -->
-            <form id="cart-checkout-form" onsubmit="processCartCheckout(event)">
+            <!-- 2. CHECKOUT FORM NA LALAWAS LANG PAG-CLICK NG PROCEED -->
+            <form id="checkout-section" onsubmit="processCartCheckout(event)">
                 <div style="border-top: 1px dashed #ccc; padding-top: 12px; margin-top: 10px;">
                     <h4 style="margin: 0 0 8px 0; color: #333;">Delivery / Shipping Details</h4>
                     <label>Buong Pangalan:</label>
@@ -118,9 +129,10 @@
                     <p class="total-price">Kabuuang Babayaran: ₱<span id="cart-final-total">0.00</span></p>
                 </div>
 
-                <button type="submit" class="btn btn-buy" style="width: 100%; margin-top: 15px; font-size: 15px;">
-                    Place Order / Check-out Now
-                </button>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn" style="background: #777;" onclick="backToCartView()">Bumalik sa Cart</button>
+                    <button type="submit" class="btn btn-buy" style="font-size: 15px;">Place Order Now</button>
+                </div>
             </form>
         </div>
     </div>
@@ -181,7 +193,7 @@
                             <button type="button" class="btn btn-buy" onclick="togglePanel(${index}, 'buy')">Buy Now</button>
                         </div>
 
-                        <!-- 1. ADD TO CART SELECTION PANEL -->
+                        <!-- 1. ADD TO CART PANEL -->
                         <div id="cart-panel-${index}" class="panel" style="border-color: #ff9800;">
                             <h4 style="color: #ff9800;">Piliin ang Uri / Sukat para sa Cart</h4>
                             <label>Sukat / Uri:</label>
@@ -279,7 +291,8 @@
 
             updateCartBadge();
             document.getElementById(`buy-panel-${index}`).style.display = 'none';
-            openCartDrawer(); // Direktang buksan ang Cart Drawer para ma-checkout naagad
+            openCartDrawer();
+            showCheckoutForm(); // Direktang buksan ang checkout form
         }
 
         function updateCartBadge() {
@@ -291,11 +304,13 @@
             let cart = JSON.parse(localStorage.getItem('userCart')) || [];
             const container = document.getElementById('cart-items-container');
             let html = "";
+            let subtotal = 0;
 
             if (cart.length === 0) {
                 html = "<p style='text-align:center; color:#666;'>Walang laman ang iyong cart.</p>";
             } else {
                 cart.forEach((item, idx) => {
+                    subtotal += item.price;
                     html += `
                         <div class="cart-item-row">
                             <div>
@@ -310,7 +325,13 @@
             }
 
             container.innerHTML = html;
-            computeCartTotal();
+            document.getElementById('cart-drawer-subtotal').textContent = subtotal.toFixed(2);
+            
+            // I-reset sa default view (cart list muna) tuwing bubuksan ang modal
+            document.getElementById('cart-view-section').style.display = 'block';
+            document.getElementById('checkout-section').style.display = 'none';
+            document.getElementById('cart-modal-title').textContent = "Ang iyong Shopping Cart";
+
             document.getElementById('cartDrawerModal').style.display = "block";
         }
 
@@ -324,6 +345,25 @@
             localStorage.setItem('userCart', JSON.stringify(cart));
             updateCartBadge();
             openCartDrawer();
+        }
+
+        function showCheckoutForm() {
+            let cart = JSON.parse(localStorage.getItem('userCart')) || [];
+            if (cart.length === 0) {
+                alert("Walang laman ang iyong cart para ma-checkout.");
+                return;
+            }
+
+            document.getElementById('cart-view-section').style.display = 'none';
+            document.getElementById('checkout-section').style.display = 'block';
+            document.getElementById('cart-modal-title').textContent = "Checkout Details";
+            computeCartTotal();
+        }
+
+        function backToCartView() {
+            document.getElementById('checkout-section').style.display = 'none';
+            document.getElementById('cart-view-section').style.display = 'block';
+            document.getElementById('cart-modal-title').textContent = "Ang iyong Shopping Cart";
         }
 
         function applyCartVoucher() {
