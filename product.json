@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Pangalan ng Produkto",
+    "desc": "Paglalarawan ng produkto",
+    "image": "link_ng_litrato.jpg",
+    "variations": [
+      { "name": "Regular", "price": 500 }
+    ]
+  }
+]
