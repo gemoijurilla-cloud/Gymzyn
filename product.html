@@ -128,22 +128,20 @@
 
         async function loadProductData() {
             try {
-                // Unahing basahin ang bagong update galing sa Admin Dashboard (localStorage)
-                const localAdminData = localStorage.getItem('adminProductData');
-                
-                if (localAdminData) {
-                    productData = JSON.parse(localAdminData);
-                    renderProduct();
-                } else {
-                    // Kung walang nahanap sa local, basahin ang products.json sa GitHub repo
-                    const response = await fetch("products.json");
-                    productData = await response.json();
-                    renderProduct();
+                // Direktang basahin ang products.json mula sa GitHub repository
+                const response = await fetch("products.json");
+        
+                if (!response.ok) {
+                    throw new Error("Hindi mabasa ang products.json");
                 }
+        
+                productData = await response.json();
+                renderProduct();
+        
             } catch (error) {
                 console.error("Error sa pag-load ng produkto:", error);
                 document.getElementById('display-title').textContent = "Bearing (Default)";
-                document.getElementById('display-desc').textContent = "Paki-update sa Admin Dashboard.";
+                document.getElementById('display-desc').textContent = "Hindi ma-load ang detalye mula sa GitHub.";
             }
         }
 
