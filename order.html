@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Mga Order ng Customer at Waybill</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        /* CSS para sa Printing ng Waybill */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-waybill, #printable-waybill * {
+                visibility: visible;
+            }
+            #printable-waybill {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow p-4 flex justify-between items-center no-print">
+        <h1 class="text-xl font-bold text-gray-800">Seller Panel</h1>
+        <div>
+            <a href="admin.html" class="text-blue-600 hover:underline mr-4">Product Manager</a>
+            <a href="orders.html" class="text-blue-600 font-semibold underline">Mga Order at Waybill</a>
+        </div>
+    </nav>
+
+    <!-- Main Content: Listahan ng Order -->
+    <div class="container mx-auto mt-8 p-4 no-print">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-700">Listahan ng mga Order ng Customer</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100 border-b">
+                            <th class="py-2 px-4 border-r text-left">Order ID</th>
+                            <th class="py-2 px-4 border-r text-left">Pangalan ng Customer</th>
+                            <th class="py-2 px-4 border-r text-left">Detalye ng Produkto / Sukat</th>
+                            <th class="py-2 px-4 border-r text-left">Kabuuang Presyo</th>
+                            <th class="py-2 px-4 text-left">Aksyon / Waybill</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <!-- Halimbawa ng Order -->
+                        <tr class="border-b">
+                            <td class="py-2 px-4 border-r">#1001</td>
+                            <td class="py-2 px-4 border-r">Juan Dela Cruz <br><small class="text-gray-500">Brgy. San Jose, Lungsod ng Maynila | 09123456789</small></td>
+                            <td class="py-2 px-4 border-r">Bearing (Size 6202) - 2 pcs</td>
+                            <td class="py-2 px-4 border-r">₱300.00</td>
+                            <td class="py-2 px-4">
+                                <button onclick="printWaybill('#1001', 'Juan Dela Cruz', 'Brgy. San Jose, Lungsod ng Maynila', '09123456789', 'Bearing (Size 6202) - 2 pcs', '₱300.00')" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                    I-print ang Waybill
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Printable Waybill Template -->
+    <div id="printable-waybill" class="hidden">
+        <div style="border: 2px dashed #000; padding: 20px; max-width: 400px; margin: 0 auto; font-family: Arial, sans-serif;">
+            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
+                <h2 style="margin: 0; font-size: 20px; font-weight: bold;">GYMZYNSHOP EXPRESS</h2>
+                <p style="margin: 2px 0; font-size: 12px;">Official Shipping Waybill</p>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+                <p style="margin: 4px 0;"><strong>Order ID:</strong> <span id="wb-order-id"></span></p>
+                <p style="margin: 4px 0;"><strong>Petsa:</strong> <span id="wb-date"></span></p>
+            </div>
+
+            <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 8px 0; margin-bottom: 10px;">
+                <p style="margin: 2px 0; font-size: 12px; color: #555;">MULA SA (Sender):</p>
+                <p style="margin: 2px 0; font-weight: bold;">Gymzyn Seller</p>
+                <p style="margin: 2px 0; font-size: 13px;">Contact: 09XXXXXXXXX</p>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 8px; border: 1px solid #ccc; margin-bottom: 10px;">
+                <p style="margin: 2px 0; font-size: 12px; color: #555;">PARA KAY (Recipient / Customer):</p>
+                <p style="margin: 2px 0; font-size: 16px; font-weight: bold;" id="wb-name"></p>
+                <p style="margin: 2px 0; font-size: 14px;" id="wb-address"></p>
+                <p style="margin: 2px 0; font-size: 14px;" id="wb-phone"></p>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <p style="margin: 2px 0; font-size: 12px; color: #555;">DETALYE NG ITEM:</p>
+                <p style="margin: 2px 0; font-weight: bold;" id="wb-items"></p>
+                <p style="margin: 2px 0; font-size: 14px;"><strong>Total Amount:</strong> <span id="wb-total"></span></p>
+            </div>
+
+            <div style="text-align: center; border-top: 1px dashed #000; padding-top: 10px;">
+                <p style="font-size: 11px; margin: 0;">BarCode / QR Placeholder</p>
+                <div style="font-size: 24px; font-weight: bold; letter-spacing: 2px; margin-top: 5px;" id="wb-barcode">#1001</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript para paganahin ang Print function -->
+    <script>
+        function printWaybill(orderId, name, address, phone, items, total) {
+            // Ilagay ang mga detalye sa hidden waybill template
+            document.getElementById('wb-order-id').innerText = orderId;
+            document.getElementById('wb-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('wb-name').innerText = name;
+            document.getElementById('wb-address').innerText = address;
+            document.getElementById('wb-phone').innerText = phone;
+            document.getElementById('wb-items').innerText = items;
+            document.getElementById('wb-total').innerText = total;
+            document.getElementById('wb-barcode').innerText = orderId;
+
+            // I-trigger ang print dialog ng browser
+            window.print();
+        }
+    </script>
+
+</body>
+</html>
