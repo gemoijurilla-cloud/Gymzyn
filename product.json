@@ -34,3 +34,16 @@
     ]
   }
 ]
+{
+    "name": "Belt",
+    "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
+    "image": "Belt.jpg",
+    "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
+    "voucher": "DISCOUNT10",
+    "variations": [
+      { "name": "Mio i125", "price": 150 },
+      { "name": "Click125", "price": 520 },
+      { "name": "Beat", "price": 440 }
+    ]
+  }
+]
