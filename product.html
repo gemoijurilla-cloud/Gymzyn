@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Multi-Product Store</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+        nav { text-align: center; margin-bottom: 30px; }
+        nav a { margin: 0 10px; text-decoration: none; font-size: 16px; color: blue; font-weight: bold; }
+        
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .product-info { text-align: center; margin-bottom: 20px; }
+        .wholesale-badge { background: #fff3cd; color: #856404; padding: 8px; border-radius: 4px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; display: none; }
+        
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: #fff; }
+        .section h3 { margin-top: 0; font-size: 16px; color: #333; }
+        
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
+        .summary { background: #f1f1f1; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .summary p { margin: 5px 0; font-size: 15px; }
+        .total-price { font-size: 18px; font-weight: bold; color: #d9534f; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; text-align: center; }
+        .btn-cart { background-color: #ff9800; color: white; }
+        .btn-buy { background-color: #4CAF50; color: white; }
+        
+        .back-btn { display: inline-block; margin-top: 20px; padding: 8px 15px; background-color: #333; color: white; text-decoration: none; border-radius: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <!-- Menu Navigation -->
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="product.html">Product</a>
+        <a href="admin.html">Admin Dashboard</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="container">
+        <div class="product-info">
+            <h2 id="display-title">Nag-loload ng Produkto...</h2>
+            <p id="display-desc">Sandali lamang habang kinukuha ang mga sukat at presyo.</p>
+            <div id="display-wholesale" class="wholesale-badge"></div>
+        </div>
+
+        <form action="#" method="POST">
+            
+            <!-- Multi-Product / Size Dropdown na may Kaukulang Presyo -->
+            <div class="section">
+                <h3>Piliin ang Sukat / Uri (Multi-Product Selection):</h3>
+                <select id="product-variation" onchange="updatePrice()"></select>
+            </div>
+
+            <!-- Delivery Details -->
+            <div class="section">
+                <h3>Delivery / Shipping Details</h3>
+                <label for="name">Buong Pangalan:</label>
+                <input type="text" id="name" placeholder="Juan Dela Cruz" required>
+                
+                <label for="address">Kumpletong Address:</label>
+                <textarea id="address" rows="3" placeholder="Street, Barangay, City, Province" required></textarea>
+                
+                <label for="phone">Numero ng Telepono:</label>
+                <input type="tel" id="phone" placeholder="09123456789" required>
+            </div>
+
+            <!-- Courier at Shipping Fee -->
+            <div class="section">
+                <h3>Courier at Shipping Fee</h3>
+                <select id="courier" onchange="computeTotal()">
+                    <option value="50">J&T Express (Standard - ₱50)</option>
+                    <option value="60">Flash Express (Express - ₱60)</option>
+                    <option value="100">Ninja Van (Same Day - ₱100)</option>
+                </select>
+            </div>
+
+            <!-- Promo Voucher -->
+            <div class="section">
+                <h3>Promo Voucher (10% Off kung higit sa ₱1,000)</h3>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="voucher" placeholder="Ilagay ang voucher code" style="margin-bottom: 0;">
+                    <button type="button" onclick="applyVoucher()" style="padding: 8px 15px; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Apply</button>
+                </div>
+                <small id="voucher-message" style="display: block; margin-top: 5px;"></small>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="section">
+                <h3>Payment Method</h3>
+                <select id="payment">
+                    <option value="cod">Cash on Delivery (COD)</option>
+                    <option value="gcash">GCash</option>
+                    <option value="maya">Maya</option>
+                    <option value="bank">Online Bank Transfer</option>
+                </select>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="summary">
+                <h3>Order Summary</h3>
+                <p>Presyo ng Piniling Sukat: ₱<span id="price-display">0.00</span></p>
+                <p>Discount (10%): -₱<span id="discount-display">0.00</span></p>
+                <p>Shipping Fee: ₱<span id="shipping-display">50.00</span></p>
+                <p class="total-price">Kabuuang Babayaran: ₱<span id="total-display">0.00</span></p>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-cart">Add to Cart</button>
+                <button type="submit" class="btn btn-buy">Buy / Checkout</button>
+            </div>
+
+        </form>
+
+        <a href="index.html" class="back-btn">&larr; Back to Home</a>
+    </div>
+
+    <!-- Script na kumukuha ng data galing Admin Dashboard o GitHub products.json -->
+    <script>
+        let currentProductPrice = 0;
+        let discountRate = 0;
+        let activeVoucherCode = "DISCOUNT10";
+        let productData = {};
+
+        async function loadProductData() {
+            try {
+                // Unahing basahin ang bagong update galing sa Admin Dashboard (localStorage)
+                const localAdminData = localStorage.getItem('adminProductData');
+                
+                if (localAdminData) {
+                    productData = JSON.parse(localAdminData);
+                    renderProduct();
+                } else {
+                    // Kung walang nahanap sa local, basahin ang products.json sa GitHub repo
+                    const response = await fetch("products.json");
+                    productData = await response.json();
+                    renderProduct();
+                }
+            } catch (error) {
+                console.error("Error sa pag-load ng produkto:", error);
+                document.getElementById('display-title').textContent = "Bearing (Default)";
+                document.getElementById('display-desc').textContent = "Paki-update sa Admin Dashboard.";
+            }
+        }
+
+        function renderProduct() {
+            document.getElementById('display-title').textContent = productData.name;
+            document.getElementById('display-desc').textContent = productData.desc;
+            activeVoucherCode = productData.voucher || "DISCOUNT10";
+
+            if (productData.wholesale) {
+                const wholesaleElem = document.getElementById('display-wholesale');
+                wholesaleElem.textContent = productData.wholesale;
+                wholesaleElem.style.display = "block";
+            }
+
+            const varSelect = document.getElementById('product-variation');
+            varSelect.innerHTML = "";
+            
+            // I-populate ang iba't ibang sukat (variations) at kaukulang presyo
+            productData.variations.forEach((v, index) => {
+                const option = document.createElement('option');
+                option.value = v.price;
+                option.textContent = `${v.name} - ₱${v.price.toFixed(2)}`;
+                if(index === 0) currentProductPrice = v.price;
+                varSelect.appendChild(option);
+            });
+
+            computeTotal();
+        }
+
+        loadProductData();
+
+        function updatePrice() {
+            const varSelect = document.getElementById('product-variation');
+            currentProductPrice = parseFloat(varSelect.value);
+            applyVoucher(true); 
+        }
+
+        function applyVoucher(isUpdatingPrice = false) {
+            const voucherInput = document.getElementById('voucher').value.trim().toUpperCase();
+            const messageElem = document.getElementById('voucher-message');
+
+            if (!isUpdatingPrice) {
+                if (voucherInput === activeVoucherCode.toUpperCase()) {
+                    if (currentProductPrice > 1000) {
+                        discountRate = 0.10;
+                        messageElem.style.color = "green";
+                        messageElem.textContent = "Tagumpay! 10% Discount ang nailapat.";
+                    } else {
+                        discountRate = 0;
+                        messageElem.style.color = "red";
+                        messageElem.textContent = "Ang voucher na ito ay para lamang sa mga bibilhing higit sa ₱1,000!";
+                    }
+                } else {
+                    discountRate = 0;
+                    if(voucherInput !== "") {
+                        messageElem.style.color = "red";
+                        messageElem.textContent = "Maling voucher code!";
+                    }
+                }
+            } else {
+                if (discountRate > 0 && currentProductPrice <= 1000) {
+                    discountRate = 0;
+                    messageElem.style.color = "red";
+                    messageElem.textContent = "Na-alis ang discount dahil ang piniling sukat ay umabot o bumaba sa ₱1,000 pababa.";
+                }
+            }
+
+            computeTotal();
+        }
+
+        function computeTotal() {
+            const courierSelect = document.getElementById('courier');
+            const shippingFee = parseFloat(courierSelect.value);
+
+            const discountAmount = currentProductPrice * discountRate;
+            const discountedPrice = currentProductPrice - discountAmount;
+            const finalTotal = discountedPrice + shippingFee;
+
+            document.getElementById('price-display').textContent = currentProductPrice.toFixed(2);
+            document.getElementById('discount-display').textContent = discountAmount.toFixed(2);
+            document.getElementById('shipping-display').textContent = shippingFee.toFixed(2);
+            document.getElementById('total-display').textContent = finalTotal.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>

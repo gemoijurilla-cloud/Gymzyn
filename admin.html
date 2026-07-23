@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Seller Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        nav { text-align: center; margin-bottom: 25px; }
+        nav a { margin: 0 10px; text-decoration: none; font-size: 16px; color: blue; font-weight: bold; }
+        
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; text-align: center; margin-top: 0; }
+        
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: #fff; }
+        .section h3 { margin-top: 0; font-size: 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
+        .variation-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+        .btn-add { background: #17a2b8; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; margin-top: 5px; }
+        .btn-remove { background: #dc3545; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; }
+        
+        .btn-save { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-save:hover { background-color: #218838; }
+        
+        .json-output { width: 100%; height: 120px; font-family: monospace; font-size: 12px; background: #272822; color: #f8f8f2; padding: 10px; border-radius: 4px; border: none; resize: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Menu Navigation -->
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="product.html">Product</a>
+        <a href="admin.html">Admin Dashboard</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="container">
+        <h2>Admin Dashboard: Multi-Product Manager</h2>
+        <p style="text-align: center; color: #666; font-size: 14px;">Dito mo ia-update ang mga sukat, presyo, at detalye ng produkto.</p>
+
+        <form id="adminForm">
+            <!-- General Info -->
+            <div class="section">
+                <h3>1. Pangunahing Impormasyon ng Produkto</h3>
+                <label for="prodName">Pangalan ng Produkto:</label>
+                <input type="text" id="prodName" value="Bearing" required>
+
+                <label for="prodDesc">Paglalarawan:</label>
+                <textarea id="prodDesc" rows="2" required>High quality steel bearing para sa iba't ibang uri ng makina at motor.</textarea>
+            </div>
+
+            <!-- Multi-Product Variations & Multi-Prices (Hal. Sukat ng Bearing) -->
+            <div class="section">
+                <h3>2. Multi-Product Variations (Mga Sukat at Presyo)</h3>
+                <p style="font-size: 12px; color: #666; margin-top: 0;">Halimbawa: Size 6202 - 150.00, Size 6301 - 220.00</p>
+                
+                <div id="variationsList">
+                    <!-- Default rows -->
+                    <div class="variation-row">
+                        <input type="text" placeholder="Sukat (Hal. Size 6202)" class="var-name" value="Size 6202" required>
+                        <input type="number" placeholder="Presyo (₱)" class="var-price" value="150" required style="width: 130px;">
+                        <button type="button" class="btn-remove" onclick="removeRow(this)">X</button>
+                    </div>
+                    <div class="variation-row">
+                        <input type="text" placeholder="Sukat (Hal. Size 6301)" class="var-name" value="Size 6301" required>
+                        <input type="number" placeholder="Presyo (₱)" class="var-price" value="220" required style="width: 130px;">
+                        <button type="button" class="btn-remove" onclick="removeRow(this)">X</button>
+                    </div>
+                </div>
+                <button type="button" class="btn-add" onclick="addVariationRow()">+ Magdagdag ng Iba pang Sukat</button>
+            </div>
+
+            <!-- Wholesale & Voucher -->
+            <div class="section">
+                <h3>3. Wholesale Info at Promo Voucher</h3>
+                <label for="wholesaleTag">Wholesale Tag:</label>
+                <input type="text" id="wholesaleTag" value="Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders">
+
+                <label for="voucherCode">Voucher Code (10% Off kung lumagpas sa ₱1,000):</label>
+                <input type="text" id="voucherCode" value="DISCOUNT10">
+            </div>
+
+            <button type="submit" class="btn-save">I-save at I-update ang Produkto</button>
+        </form>
+
+        <!-- Para sa GitHub JSON Copy-Paste kung gugustuhin -->
+        <div class="section" style="margin-top: 20px;">
+            <h3>4. JSON Code para sa iyong GitHub (`products.json`)</h3>
+            <p style="font-size: 12px; color: #666;">Kapag pinindot ang save, makikita rito ang kopyang JSON na pwede mong i-paste diretso sa iyong `products.json` file sa GitHub repository.</p>
+            <textarea id="jsonOutput" class="json-output" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Magdagdag ng bagong row para sa variation
+        function addVariationRow(name = "", price = "") {
+            const list = document.getElementById('variationsList');
+            const row = document.createElement('div');
+            row.className = "variation-row";
+            row.innerHTML = `
+                <input type="text" placeholder="Sukat (Hal. Size 6204)" class="var-name" value="${name}" required>
+                <input type="number" placeholder="Presyo (₱)" class="var-price" value="${price}" required style="width: 130px;">
+                <button type="button" class="btn-remove" onclick="removeRow(this)">X</button>
+            `;
+            list.appendChild(row);
+        }
+
+        // Burahin ang row
+        function removeRow(btn) {
+            const rows = document.querySelectorAll('.variation-row');
+            if (rows.length > 1) {
+                btn.parentElement.remove();
+            } else {
+                alert("Kailangan ay may kahit isang variation man lang ang produkto.");
+            }
+        }
+
+        // Kapag pinindot ang Save
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('prodName').value;
+            const desc = document.getElementById('prodDesc').value;
+            const wholesale = document.getElementById('wholesaleTag').value;
+            const voucher = document.getElementById('voucherCode').value;
+
+            const varNames = document.querySelectorAll('.var-name');
+            const varPrices = document.querySelectorAll('.var-price');
+            let variations = [];
+
+            for (let i = 0; i < varNames.length; i++) {
+                if (varNames[i].value.trim() !== "" && varPrices[i].value.trim() !== "") {
+                    variations.push({
+                        name: varNames[i].value,
+                        price: parseFloat(varPrices[i].value)
+                    });
+                }
+            }
+
+            const productDataObject = { name, desc, wholesale, voucher, variations };
+
+            // 1. I-save sa localStorage para agad makita sa product.html sa local browser testing
+            localStorage.setItem('adminProductData', JSON.stringify(productDataObject));
+
+            // 2. I-generate ang JSON text para sa GitHub products.json file
+            document.getElementById('jsonOutput').value = JSON.stringify(productDataObject, null, 2);
+
+            alert("Tagumpay na na-update ang produkto! Ang data ay nai-save na.");
+        });
+    </script>
+
+</body>
+</html>

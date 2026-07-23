@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <title>Gymzyn Moto Parts</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        header { background: #222; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; cursor: pointer; }
+        nav a:hover { color: #ff9800; }
+        .content { padding: 40px; background: white; max-width: 800px; margin: 30px auto; border-radius: 6px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; }
+        .btn:hover { background: #0056b3; }
+        .error { color: red; margin-top: 10px; font-weight: bold; }
+        input { width: 100%; padding: 8px; margin: 5px 0 15px 0; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION MENU (Binago para tawagin ang mga hiwalay na HTML files) -->
+    <header>
+        <h2>Gymzyn Moto Parts</h2>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="Product.html">Product</a>
+            <a href="Contact.html">Contact</a>
+            <a onclick="showSection('login')" style="background: #ff9800; padding: 8px 15px; border-radius: 4px;">Login</a>
+        </nav>
+    </header>
+
+    <!-- CONTENT SECTIONS -->
+    <div class="content">
+        
+        <!-- HOME SECTION -->
+        <div id="home" class="section active">
+            <h1>Maligayang Pagdating sa Gymzyn Moto Parts</h1>
+            <p>Ito ang opisyal na pahina ng ating tindahan para sa mga de-kalidad na piyesa ng motor.</p>
+        </div>
+
+        <!-- LOGIN SECTION (Nananatili rito para sa pag-verify bago pumunta sa admin) -->
+        <div id="login" class="section">
+            <h1>Seller Login</h1>
+            <p>Ilagay ang iyong admin credentials para makapasok sa dashboard.</p>
+            
+            <label>Username:</label>
+            <input type="text" id="username" required>
+            
+            <label>Password:</label>
+            <input type="password" id="password" required>
+            
+            <button class="btn" onclick="validateLogin()">OK</button>
+            <div id="errorMsg" class="error"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Function para ipakita lang ang Login form sa index page kapag pinindot ang Login menu
+        function showSection(sectionId) {
+            let sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('errorMsg').innerText = ""; 
+        }
+
+        // 2. Function sa pag-verify ng credentials at pagtawag sa admin dashboard file
+        function validateLogin() {
+            let user = document.getElementById('username').value;
+            let pass = document.getElementById('password').value;
+
+            // Username at Password na iyong itinakda:
+            let correctUser = "gemoi";       
+            let correctPass = "gemoi062579";   
+            
+            // Eksaktong pangalan ng admin dashboard file sa iyong repository:
+            let dashboardPath = "admin.html"; // Kung "admin_dashboard.html" ang file mo, palitan ito rito
+
+            if (user === correctUser && pass === correctPass) {
+                // Dadalhin ka na sa admin page
+                window.location.href = dashboardPath;
+            } else {
+                document.getElementById('errorMsg').innerText = "Mali ang username o password!";
+            }
+        }
+    </script>
+
+</body>
+</html>
