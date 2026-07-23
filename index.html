@@ -13,13 +13,13 @@
         .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 16px; }
         .nav-links a.login-btn { background: #ffaa00; padding: 8px 15px; border-radius: 4px; color: black; }
 
-        /* Slider Container - Ginawang mas malaki at halos sakop ang buong screen */
-        .slider-container { width: 95%; max-width: 1300px; position: relative; margin: 20px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #000; }
+        /* Slider Container - Inayos para hindi mag-overlap ang text */
+        .slider-container { width: 95%; max-width: 1300px; height: 550px; position: relative; margin: 20px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #000; }
         
         .slide { 
             position: absolute; 
             width: 100%; 
-            height: 550px; /* Mas mataas na slider image */
+            height: 100%; 
             object-fit: cover; 
             opacity: 0; 
             transition: opacity 2s ease-in-out; 
@@ -29,7 +29,6 @@
         
         .slide.active { 
             opacity: 1; 
-            position: relative; 
         }
 
         /* Next and Prev buttons */
@@ -38,10 +37,10 @@
         .next { right: 20px; }
         .prev:hover, .next:hover { background: rgba(0,0,0,0.9); }
 
-        /* Main Content Box - Pinalawak din */
-        .content-box { width: 95%; max-width: 1300px; margin: 20px auto 40px auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; box-sizing: border-box; }
-        .content-box h2 { font-size: 28px; color: #222; }
-        .content-box p { font-size: 16px; color: #555; }
+        /* Main Content Box - Nilagyan ng clear: both at maayos na margin para laging lumitaw sa baba */
+        .content-box { width: 95%; max-width: 1300px; margin: 30px auto 40px auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; box-sizing: border-box; clear: both; }
+        .content-box h2 { font-size: 28px; color: #222; margin-top: 0; }
+        .content-box p { font-size: 16px; color: #555; margin-bottom: 0; }
     </style>
 </head>
 <body>
