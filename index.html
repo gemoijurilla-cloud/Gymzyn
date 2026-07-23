@@ -8,38 +8,40 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
         
         /* Navigation Bar */
-        .navbar { display: flex; justify-content: space-between; align-items: center; background: #222; color: white; padding: 15px 30px; }
-        .navbar h2 { margin: 0; font-size: 20px; }
-        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; background: #222; color: white; padding: 15px 40px; }
+        .navbar h2 { margin: 0; font-size: 22px; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 16px; }
         .nav-links a.login-btn { background: #ffaa00; padding: 8px 15px; border-radius: 4px; color: black; }
 
-        /* Slider Container Styles */
-        .slider-container { max-width: 800px; position: relative; margin: 30px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #000; }
+        /* Slider Container - Ginawang mas malaki at halos sakop ang buong screen */
+        .slider-container { width: 95%; max-width: 1300px; position: relative; margin: 20px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #000; }
         
         .slide { 
             position: absolute; 
             width: 100%; 
-            height: 400px; 
+            height: 550px; /* Mas mataas na slider image */
             object-fit: cover; 
             opacity: 0; 
-            transition: opacity 2s ease-in-out; /* Dito inayos para maging Slomo Fade (2 seconds) */
+            transition: opacity 2s ease-in-out; 
             top: 0;
             left: 0;
         }
         
         .slide.active { 
             opacity: 1; 
-            position: relative; /* Para sumunod ang taas ng container sa image */
+            position: relative; 
         }
 
         /* Next and Prev buttons */
-        .prev, .next { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 12px; color: white; font-weight: bold; font-size: 18px; background: rgba(0,0,0,0.5); border-radius: 50%; border: none; z-index: 10; }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-        .prev:hover, .next:hover { background: rgba(0,0,0,0.8); }
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 15px; color: white; font-weight: bold; font-size: 22px; background: rgba(0,0,0,0.6); border-radius: 50%; border: none; z-index: 10; }
+        .prev { left: 20px; }
+        .next { right: 20px; }
+        .prev:hover, .next:hover { background: rgba(0,0,0,0.9); }
 
-        /* Main Content Box */
-        .content-box { max-width: 800px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+        /* Main Content Box - Pinalawak din */
+        .content-box { width: 95%; max-width: 1300px; margin: 20px auto 40px auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; box-sizing: border-box; }
+        .content-box h2 { font-size: 28px; color: #222; }
+        .content-box p { font-size: 16px; color: #555; }
     </style>
 </head>
 <body>
@@ -55,9 +57,9 @@
 
     <!-- Image Slider / Carousel Section -->
     <div class="slider-container">
-        <img class="slide active" src="https://github.com/gemoijurilla-cloud/Parts/blob/main/Folder/Castrol%20Go.jpg" alt="Motorcycle Parts 1">
-        <img class="slide" src="https://github.com/gemoijurilla-cloud/Parts/blob/main/Folder/Bearing.jpg" alt="Motorcycle Parts 2">
-        <img class="slide" src="https://github.com/gemoijurilla-cloud/Gymzyn/blob/main/handleswitch.jpg" alt="Motorcycle Parts 3">
+        <img class="slide active" src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1300" alt="Motorcycle Parts 1">
+        <img class="slide" src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1300" alt="Motorcycle Parts 2">
+        <img class="slide" src="https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=1300" alt="Motorcycle Parts 3">
 
         <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
         <button class="next" onclick="changeSlide(1)">&#10095;</button>
@@ -70,7 +72,7 @@
 
     <script>
         let slideIndex = 0;
-        let slideTimer = setInterval(autoSlide, 5000); // Lilipat ang slide kada 5 segundo para may sapat na oras ang slomo fade
+        let slideTimer = setInterval(autoSlide, 5000);
 
         function showSlide(n) {
             let slides = document.getElementsByClassName("slide");
@@ -84,7 +86,7 @@
         }
 
         function changeSlide(n) {
-            clearInterval(slideTimer); // I-reset ang timer pag pinindot ang arrow
+            clearInterval(slideTimer);
             slideIndex += n;
             showSlide(slideIndex);
             slideTimer = setInterval(autoSlide, 5000);
