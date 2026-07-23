@@ -2,7 +2,7 @@
   {
     "name": "Gymzyn Moto Parts Item",
     "desc": "De-kalidad na piyesa ng motor na diretso mula sa aming imbakang-loob.",
-    "image": "default.jpg",
+    "image": "Bearing.jpg",
     "wholesale": "Wholesale available: Min. 5 pcs - 10% Off sa Bulk Orders",
     "voucher": "DISCOUNT10",
     "variations": [
@@ -11,17 +11,21 @@
     ]
   },
   {
-    "name": "Bearing",
-    "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
-    "image": "bearing.jpg",
-    "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
-    "voucher": "DISCOUNT10",
-    "variations": [
-      { "name": "Size 6202", "price": 150 },
-      { "name": "Size 6301", "price": 220 }
-    ]
-  },
-  {
+  "name": "Bearing",
+  "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
+  "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
+  "voucher": "DISCOUNT10",
+  "variations": [
+    {
+      "name": "Size 6202",
+      "price": 150
+    },
+    {
+      "name": "Size 6301",
+      "price": 220
+    }
+  ]
+}
     "name": "Brake Shoe",
     "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
     "image": "brakeshoe.jpg",
