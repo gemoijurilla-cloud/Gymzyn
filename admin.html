@@ -8,7 +8,7 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
         .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
         .header-nav h2 { margin: 0; font-size: 20px; }
-        .header-nav div a { margin-left: 15text-decoration: none; font-weight: bold; color: #007BFF; text-decoration: none; }
+        .header-nav div a { margin-left: 15px; font-weight: bold; color: #007BFF; text-decoration: none; }
         
         .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
@@ -35,8 +35,10 @@
     <div class="header-nav">
         <h2>Admin Dashboard - Seller Panel</h2>
         <div>
+            <a href="index.html" style="color: #28a745;">&larr; Home Page</a>
+            <a href="product.html">Product Page</a>
             <a href="admin.html">Product Manager</a>
-            <a href="orders.html" style="color: #666;">Mga Order & Waybill</a>
+            <a href="orders.html" style="color: #666;">Mga Order</a>
         </div>
     </div>
 
@@ -57,7 +59,6 @@
                 <br>
                 <img id="img-preview" class="image-preview" alt="Preview">
             </div>
-            <!-- Hidden input para maglaman ng Base64 string -->
             <input type="hidden" id="prod-image-base64">
 
             <label>Wholesale / Bulk Info (Opsyonal):</label>
@@ -65,7 +66,6 @@
 
             <label>Multi-Product Variations (Mga Sukat at Presyo)</label>
             <div id="variations-container">
-                <!-- Dito papasok ang variation rows -->
             </div>
             <button type="button" class="btn-add" onclick="addVariationRow()">+ Magdagdag ng Variation</button>
 
@@ -76,14 +76,13 @@
     <script>
         let currentImageBase64 = "";
 
-        // I-load ang unang produkto mula sa products.json kung meron man para ma-edit
         async function loadExistingProduct() {
             try {
                 const response = await fetch("products.json");
                 if (response.ok) {
                     const products = await response.json();
                     if (products.length > 0) {
-                        const p = products[0]; // Halimbawa ay ang unang produkto ang ita-tally sa admin
+                        const p = products[0];
                         document.getElementById('prod-name').value = p.name || "";
                         document.getElementById('prod-desc').value = p.desc || "";
                         document.getElementById('prod-wholesale').value = p.wholesale || "";
@@ -108,9 +107,8 @@
                     }
                 }
             } catch (e) {
-                console.log("Walang pamunuang JSON o bago pa lamang.", e);
+                console.log("Walang products.json pa.", e);
                 addVariationRow("Size 6202", 150);
-                addVariationRow("Size 6301", 220);
             }
         }
 
@@ -119,14 +117,13 @@
             const div = document.createElement('div');
             div.className = "variation-row";
             div.innerHTML = `
-                <input type="text" placeholder="Pangalan ng Sukat/Uri (Hal. Size 6202)" value="${name}" class="var-name" style="flex: 2;" required>
+                <input type="text" placeholder="Pangalan ng Sukat" value="${name}" class="var-name" style="flex: 2;" required>
                 <input type="number" placeholder="Presyo (₱)" value="${price}" class="var-price" style="flex: 1;" step="0.01" required>
                 <button type="button" class="btn-remove" onclick="this.parentElement.remove()">X</button>
             `;
             container.appendChild(div);
         }
 
-        // Conversion ng File papuntang Base64
         function previewAndConvertImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -170,11 +167,7 @@
                 variations: variations
             }];
 
-            // Dahil static page ang GitHub Pages, ipapakita natin ang JSON code na ito
-            // para ma-copy at ma-paste o ma-download ng admin nang diretso sa products.json file.
             const jsonString = JSON.stringify(productData, null, 4);
-            
-            // I-download nang automatic ang bagong products.json file para madali itong mai-upload sa GitHub repo
             const blob = new Blob([jsonString], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -184,10 +177,10 @@
             a.click();
             document.body.removeChild(a);
 
-            alert("Tagumpay! Na-generate na ang updated 'products.json' na may kasamang larawan at sukat. I-upload lamang ito sa iyong GitHub repository para agad itong lumabas sa product page!");
+            alert("Tagumpay! Na-download ang 'products.json'. I-upload ito sa iyong GitHub repository.");
         }
 
-        loadExistingProduct();
+        loadExistingPlugin = loadExistingProduct();
     </script>
 </body>
 </html>
