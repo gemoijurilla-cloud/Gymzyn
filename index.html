@@ -13,8 +13,13 @@
         .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 16px; }
         .nav-links a.login-btn { background: #ffaa00; padding: 8px 15px; border-radius: 4px; color: black; }
 
-        /* Slider Container - Inayos para hindi mag-overlap ang text */
-        .slider-container { width: 95%; max-width: 1300px; height: 550px; position: relative; margin: 20px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #000; }
+        /* Main Content Box - Nilagay na sa Itaas */
+        .content-box { width: 95%; max-width: 1300px; margin: 25px auto 15px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; box-sizing: border-box; }
+        .content-box h2 { font-size: 28px; color: #222; margin-top: 0; }
+        .content-box p { font-size: 16px; color: #555; margin-bottom: 0; }
+
+        /* Slider Container */
+        .slider-container { width: 95%; max-width: 1300px; height: 550px; position: relative; margin: 0 auto 40px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #000; }
         
         .slide { 
             position: absolute; 
@@ -36,11 +41,6 @@
         .prev { left: 20px; }
         .next { right: 20px; }
         .prev:hover, .next:hover { background: rgba(0,0,0,0.9); }
-
-        /* Main Content Box - Nilagyan ng clear: both at maayos na margin para laging lumitaw sa baba */
-        .content-box { width: 95%; max-width: 1300px; margin: 30px auto 40px auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; box-sizing: border-box; clear: both; }
-        .content-box h2 { font-size: 28px; color: #222; margin-top: 0; }
-        .content-box p { font-size: 16px; color: #555; margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -54,7 +54,13 @@
         </div>
     </div>
 
-    <!-- Image Slider / Carousel Section -->
+    <!-- Welcome Content Box (Nasa Ibabaw na ngayon) -->
+    <div class="content-box">
+        <h2>Maligayang Pagdating sa Gymzyn Moto Parts</h2>
+        <p>Ito ang opisyal na pahina ng ating tindahan para sa mga de-kalidad na piyesa ng motor.</p>
+    </div>
+
+    <!-- Image Slider / Carousel Section (Nasa Baba na ng text box) -->
     <div class="slider-container">
         <img class="slide active" src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1300" alt="Motorcycle Parts 1">
         <img class="slide" src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1300" alt="Motorcycle Parts 2">
@@ -62,11 +68,6 @@
 
         <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
         <button class="next" onclick="changeSlide(1)">&#10095;</button>
-    </div>
-
-    <div class="content-box">
-        <h2>Maligayang Pagdating sa Gymzyn Moto Parts</h2>
-        <p>Ito ang opisyal na pahina ng ating tindahan para sa mga de-kalidad na piyesa ng motor.</p>
     </div>
 
     <script>
