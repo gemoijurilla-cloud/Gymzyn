@@ -2,89 +2,98 @@
 <html lang="tl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gymzyn Moto Parts</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        header { background: #222; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; cursor: pointer; }
-        nav a:hover { color: #ff9800; }
-        .content { padding: 40px; background: white; max-width: 800px; margin: 30px auto; border-radius: 6px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .section { display: none; }
-        .section.active { display: block; }
-        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; }
-        .btn:hover { background: #0056b3; }
-        .error { color: red; margin-top: 10px; font-weight: bold; }
-        input { width: 100%; padding: 8px; margin: 5px 0 15px 0; box-sizing: border-box; }
+        
+        /* Navigation Bar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; background: #222; color: white; padding: 15px 30px; }
+        .navbar h2 { margin: 0; font-size: 20px; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; }
+        .nav-links a.login-btn { background: #ffaa00; padding: 8px 15px; border-radius: 4px; color: black; }
+
+        /* Slider Container Styles */
+        .slider-container { max-width: 800px; position: relative; margin: 30px auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #000; }
+        
+        .slide { 
+            position: absolute; 
+            width: 100%; 
+            height: 400px; 
+            object-fit: cover; 
+            opacity: 0; 
+            transition: opacity 2s ease-in-out; /* Dito inayos para maging Slomo Fade (2 seconds) */
+            top: 0;
+            left: 0;
+        }
+        
+        .slide.active { 
+            opacity: 1; 
+            position: relative; /* Para sumunod ang taas ng container sa image */
+        }
+
+        /* Next and Prev buttons */
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 12px; color: white; font-weight: bold; font-size: 18px; background: rgba(0,0,0,0.5); border-radius: 50%; border: none; z-index: 10; }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        .prev:hover, .next:hover { background: rgba(0,0,0,0.8); }
+
+        /* Main Content Box */
+        .content-box { max-width: 800px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGATION MENU (Binago para tawagin ang mga hiwalay na HTML files) -->
-    <header>
+    <div class="navbar">
         <h2>Gymzyn Moto Parts</h2>
-        <nav>
+        <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="product.html">Product</a>
-            <a onclick="showSection('login')" style="background: #ff9800; padding: 8px 15px; border-radius: 4px;">Login</a>
-        </nav>
-    </header>
-
-    <!-- CONTENT SECTIONS -->
-    <div class="content">
-        
-        <!-- HOME SECTION -->
-        <div id="home" class="section active">
-            <h1>Maligayang Pagdating sa Gymzyn Moto Parts</h1>
-            <p>Ito ang opisyal na pahina ng ating tindahan para sa mga de-kalidad na piyesa ng motor.</p>
+            <a href="admin.html" class="login-btn">Admin Login</a>
         </div>
+    </div>
 
-        <!-- LOGIN SECTION (Nananatili rito para sa pag-verify bago pumunta sa admin) -->
-        <div id="login" class="section">
-            <h1>Seller Login</h1>
-            <p>Ilagay ang iyong admin credentials para makapasok sa dashboard.</p>
-            
-            <label>Username:</label>
-            <input type="text" id="username" required>
-            
-            <label>Password:</label>
-            <input type="password" id="password" required>
-            
-            <button class="btn" onclick="validateLogin()">OK</button>
-            <div id="errorMsg" class="error"></div>
-        </div>
+    <!-- Image Slider / Carousel Section -->
+    <div class="slider-container">
+        <img class="slide active" src="https://github.com/gemoijurilla-cloud/Parts/blob/main/Folder/Castrol%20Go.jpg" alt="Motorcycle Parts 1">
+        <img class="slide" src="https://github.com/gemoijurilla-cloud/Parts/blob/main/Folder/Bearing.jpg" alt="Motorcycle Parts 2">
+        <img class="slide" src="https://github.com/gemoijurilla-cloud/Gymzyn/blob/main/handleswitch.jpg" alt="Motorcycle Parts 3">
 
+        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="content-box">
+        <h2>Maligayang Pagdating sa Gymzyn Moto Parts</h2>
+        <p>Ito ang opisyal na pahina ng ating tindahan para sa mga de-kalidad na piyesa ng motor.</p>
     </div>
 
     <script>
-        // 1. Function para ipakita lang ang Login form sa index page kapag pinindot ang Login menu
-        function showSection(sectionId) {
-            let sections = document.querySelectorAll('.section');
-            sections.forEach(sec => sec.classList.remove('active'));
+        let slideIndex = 0;
+        let slideTimer = setInterval(autoSlide, 5000); // Lilipat ang slide kada 5 segundo para may sapat na oras ang slomo fade
+
+        function showSlide(n) {
+            let slides = document.getElementsByClassName("slide");
+            if (n >= slides.length) { slideIndex = 0; }
+            if (n < 0) { slideIndex = slides.length - 1; }
             
-            document.getElementById(sectionId).classList.add('active');
-            document.getElementById('errorMsg').innerText = ""; 
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+            slides[slideIndex].classList.add("active");
         }
 
-        // 2. Function sa pag-verify ng credentials at pagtawag sa admin dashboard file
-        function validateLogin() {
-            let user = document.getElementById('username').value;
-            let pass = document.getElementById('password').value;
+        function changeSlide(n) {
+            clearInterval(slideTimer); // I-reset ang timer pag pinindot ang arrow
+            slideIndex += n;
+            showSlide(slideIndex);
+            slideTimer = setInterval(autoSlide, 5000);
+        }
 
-            // Username at Password na iyong itinakda:
-            let correctUser = "gemoi";       
-            let correctPass = "gemoi062579";   
-            
-            // Eksaktong pangalan ng admin dashboard file sa iyong repository:
-            let dashboardPath = "admin.html"; // Kung "admin_dashboard.html" ang file mo, palitan ito rito
-
-            if (user === correctUser && pass === correctPass) {
-                // Dadalhin ka na sa admin page
-                window.location.href = dashboardPath;
-            } else {
-                document.getElementById('errorMsg').innerText = "Mali ang username o password!";
-            }
+        function autoSlide() {
+            slideIndex++;
+            showSlide(slideIndex);
         }
     </script>
-
 </body>
 </html>
