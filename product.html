@@ -6,7 +6,7 @@
     <title>Product - Multi-Product Store</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
-        nav { text-align: center; margin-bottom: 30px; }
+        nav { text-align: center; margin-bottom: 20px; }
         nav a { margin: 0 10px; text-decoration: none; font-size: 16px; color: blue; font-weight: bold; }
         
         .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -23,20 +23,19 @@
         .summary p { margin: 5px 0; font-size: 15px; }
         .total-price { font-size: 18px; font-weight: bold; color: #d9534f; }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; text-align: center; }
-        .btn-cart { background-color: #ff9800; color: white; }
-        .btn-buy { background-color: #4CAF50; color: white; }
+        /* Main Action Buttons (Chat, Add to Cart, Buy Now) */
+        .main-action-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .action-btn { flex: 1; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 15px; text-align: center; }
+        .btn-chat { background-color: #008CBA; color: white; }
+        .btn-add-cart-main { background-color: #ff9800; color: white; }
+        .btn-buy-main { background-color: #4CAF50; color: white; }
         
-        /* Itago muna ang ibang bahagi hangga't hindi pa pinipili o kino-click */
-        .hidden-step { display: none; }
-        
+        .hidden-section { display: none; margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 15px; }
         .back-btn { display: inline-block; margin-top: 20px; padding: 8px 15px; background-color: #333; color: white; text-decoration: none; border-radius: 5px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <!-- Menu Navigation -->
     <nav>
         <a href="index.html">Home</a>
         <a href="product.html">Product</a>
@@ -44,38 +43,53 @@
     </nav>
 
     <div class="container">
-        <!-- 1. Listahan ng Produkto at Larawan -->
-        <div class="product-info">
-            <label for="product-select" style="text-align: left; font-size: 15px;">Piliin ang Produkto:</label>
-            <select id="product-select" onchange="selectProduct()" style="padding: 10px; margin-bottom: 15px; font-weight: bold;"></select>
-
-            <img id="display-image" src="" alt="Product Image" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: none; border: 1px solid #ddd;">
-            
-            <h2 id="display-title" style="margin: 10px 0 5px 0;">Nag-loload ng Produkto...</h2>
-            <p id="display-desc" style="color: #666; font-size: 14px;">Sandali lamang habang kinukuha ang mga detalye.</p>
-            <div id="display-wholesale" class="wholesale-badge"></div>
+        <!-- Piliin ang Produkto Dropdown -->
+        <div style="margin-bottom: 15px;">
+            <label for="product-select">Piliin ang Produkto:</label>
+            <select id="product-select" onchange="selectProduct()" style="padding: 10px; font-weight: bold;"></select>
         </div>
 
-        <!-- Pindutan para lumabas ang Sukat/Uri -->
-        <button type="button" id="btn-show-options" onclick="showOptionsSection()" style="width: 100%; padding: 12px; background: #007BFF; color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 20px;">
-            Piliin ang Sukat / Uri (Multi-Product Selection) &darr;
-        </button>
-
-        <form action="#" id="checkout-form" method="POST">
+        <!-- Product Image & Basic Info na may presyo sa ibaba -->
+        <div class="product-info">
+            <img id="display-image" src="" alt="Product Image" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: none; border: 1px solid #ddd;">
+            <h2 id="display-title" style="margin: 5px 0;">Nag-loload ng Produkto...</h2>
             
-            <!-- Sukat / Uri Section (Naka-hide muna hanggang i-click ang button sa taas) -->
-            <div class="section hidden-step" id="section-variations">
-                <h3>Piliin ang Sukat / Uri:</h3>
-                <select id="product-variation" onchange="updatePrice()"></select>
-                <button type="button" onclick="proceedToCheckout()" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer;">
-                    Magpatuloy sa Checkout (Delivery & Payment) &darr;
-                </button>
-            </div>
+            <!-- Presyo na nakasulat sa ibaba ng larawan/titulo -->
+            <p style="font-size: 20px; font-weight: bold; color: #d9534f; margin: 8px 0;">
+                ₱<span id="display-base-price">0.00</span>
+            </p>
 
-            <!-- Delivery Details, Courier, Voucher, Payment at Summary (Naka-hide hanggang i-click ang proceed) -->
-            <div id="section-checkout-details" class="hidden-step">
-                
-                <div class="section">
+            <p id="display-desc" style="color: #666; font-size: 14px;"></p>
+            <div id="display-wholesale" class="wholesale-badge"></div>
+
+            <!-- Chat, Add to Cart, Buy Now Buttons -->
+            <div class="main-action-buttons">
+                <button type="button" class="action-btn btn-chat" onclick="openChat()">Chat</button>
+                <button type="button" class="action-btn btn-add-cart-main" onclick="triggerAddToCartView()">Add to Cart</button>
+                <button type="button" class="action-btn btn-buy-main" onclick="triggerBuyNowView()">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- ================= CART SELECTION PANEL ================= -->
+        <div id="cart-panel" class="hidden-section section" style="background: #fff8f0; border-color: #ff9800;">
+            <h3 style="color: #ff9800;">Idagdag sa Cart - Piliin ang Uri</h3>
+            <label for="cart-variation-select">Sukat / Uri:</label>
+            <select id="cart-variation-select" onchange="updateCartPrice()"></select>
+            <p>Presyo: ₱<span id="cart-item-price">0.00</span></p>
+            <button type="button" onclick="confirmAddToCart()" style="width: 100%; padding: 12px; background: #ff9800; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px;">
+                I-confirm ang Add to Cart
+            </button>
+        </div>
+
+        <!-- ================= BUY NOW / CHECKOUT PANEL ================= -->
+        <div id="buy-panel" class="hidden-section section" style="background: #f0f9f0; border-color: #4CAF50;">
+            <h3 style="color: #4CAF50;">Mag-check Out - Piliin ang Uri at Detalye</h3>
+            
+            <form action="#" id="checkout-form" method="POST">
+                <label for="buy-variation-select">Sukat / Uri:</label>
+                <select id="buy-variation-select" onchange="updateBuyPrice()"></select>
+
+                <div class="section" style="margin-top: 15px;">
                     <h3>Delivery / Shipping Details</h3>
                     <label for="name">Buong Pangalan:</label>
                     <input type="text" id="name" placeholder="Juan Dela Cruz">
@@ -123,14 +137,11 @@
                     <p class="total-price">Kabuuang Babayaran: ₱<span id="total-display">0.00</span></p>
                 </div>
 
-                <div class="btn-group">
-                    <button type="button" class="btn btn-cart">Add to Cart</button>
-                    <button type="submit" class="btn btn-buy">Buy / Checkout</button>
-                </div>
-
-            </div>
-
-        </form>
+                <button type="submit" style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px;">
+                    Place Order / Check-out Now
+                </button>
+            </form>
+        </div>
 
         <a href="index.html" class="back-btn">&larr; Back to Home</a>
     </div>
@@ -145,13 +156,11 @@
         async function loadProductData() {
             try {
                 const response = await fetch("products.json");
-                if (!response.ok) {
-                    throw new Error("Hindi mabasa ang products.json");
-                }
+                if (!response.ok) throw new Error("Hindi mabasa ang products.json");
                 productsList = await response.json();
                 renderProductSelector();
             } catch (error) {
-                console.error("Error sa pag-load ng produkto:", error);
+                console.error("Error sa pag-load:", error);
                 document.getElementById('display-title').textContent = "Default Item";
                 document.getElementById('display-desc').textContent = "Hindi ma-load ang detalye mula sa GitHub.";
             }
@@ -163,19 +172,15 @@
                 selectProdHtml += `<option value="${idx}">${p.name}</option>`;
             });
             document.getElementById('product-select').innerHTML = selectProdHtml;
-            
-            if(productsList.length > 0) {
-                displayProductDetails(0);
-            }
+            if(productsList.length > 0) displayProductDetails(0);
         }
 
         function selectProduct() {
             const index = document.getElementById('product-select').value;
             displayProductDetails(index);
-            // I-reset ang mga nakatagong seksyon kapag nagpalit ng produkto
-            document.getElementById('section-variations').style.display = "none";
-            document.getElementById('section-checkout-details').style.display = "none";
-            document.getElementById('btn-show-options').style.display = "block";
+            // Itago ang mga panel kapag nagpalit ng produkto
+            document.getElementById('cart-panel').style.display = "none";
+            document.getElementById('buy-panel').style.display = "none";
         }
 
         function displayProductDetails(index) {
@@ -201,34 +206,78 @@
                 wholesaleElem.style.display = "none";
             }
 
-            const varSelect = document.getElementById('product-variation');
-            varSelect.innerHTML = ""; 
-            
-            productData.variations.forEach((v, idx) => {
-                const option = document.createElement('option');
-                option.value = v.price;
-                option.textContent = `${v.name} - ₱${v.price.toFixed(2)}`;
-                if(idx === 0) currentProductPrice = v.price;
-                varSelect.appendChild(option);
+            // I-set ang unang price sa ilalim ng larawan
+            if(productData.variations && productData.variations.length > 0) {
+                currentProductPrice = productData.variations[0].price;
+                document.getElementById('display-base-price').textContent = currentProductPrice.toFixed(2);
+            }
+
+            // I-populate ang variations para sa Cart at Buy Now dropdowns
+            populateVariations(productData.variations);
+        }
+
+        function populateVariations(variations) {
+            let optionsHtml = "";
+            variations.forEach((v) => {
+                optionsHtml += `<option value="${v.price}">${v.name} - ₱${v.price.toFixed(2)}</option>`;
             });
+            
+            document.getElementById('cart-variation-select').innerHTML = optionsHtml;
+            document.getElementById('buy-variation-select').innerHTML = optionsHtml;
+            
+            if(variations.length > 0) {
+                document.getElementById('cart-item-price').textContent = variations[0].price.toFixed(2);
+                currentProductPrice = variations[0].price;
+            }
             computeTotal();
         }
 
-        function showOptionsSection() {
-            document.getElementById('section-variations').style.display = "block";
-            document.getElementById('btn-show-options').style.display = "none";
+        function triggerAddToCartView() {
+            document.getElementById('cart-panel').style.display = "block";
+            document.getElementById('buy-panel').style.display = "none";
+            document.getElementById('cart-panel').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function proceedToCheckout() {
-            document.getElementById('section-checkout-details').style.display = "block";
-            // I-scroll pababa papunta sa checkout details para madaling makita ng user
-            document.getElementById('section-checkout-details').scrollIntoView({ behavior: 'smooth' });
+        function triggerBuyNowView() {
+            document.getElementById('buy-panel').style.display = "block";
+            document.getElementById('cart-panel').style.display = "none";
+            document.getElementById('buy-panel').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function updatePrice() {
-            const varSelect = document.getElementById('product-variation');
-            currentProductPrice = parseFloat(varSelect.value);
-            applyVoucher(true); 
+        function openChat() {
+            alert("Maaari kang mag-mensahe sa aming customer support sa contact page.");
+        }
+
+        function updateCartPrice() {
+            const select = document.getElementById('cart-variation-select');
+            document.getElementById('cart-item-price').textContent = parseFloat(select.value).toFixed(2);
+        }
+
+        function updateBuyPrice() {
+            const select = document.getElementById('buy-variation-select');
+            currentProductPrice = parseFloat(select.value);
+            document.getElementById('display-base-price').textContent = currentProductPrice.toFixed(2);
+            applyVoucher(true);
+        }
+
+        function confirmAddToCart() {
+            const select = document.getElementById('cart-variation-select');
+            const selectedText = select.options[select.selectedIndex].text;
+            const price = parseFloat(select.value);
+
+            const cartItem = {
+                product: document.getElementById('display-title').textContent,
+                variation: selectedText,
+                price: price,
+                date: new Date().toISOString()
+            };
+
+            let cart = JSON.parse(localStorage.getItem('userCart')) || [];
+            cart.push(cartItem);
+            localStorage.setItem('userCart', JSON.stringify(cart));
+
+            alert('Matagumpay na naidagdag sa Cart ang produkto!');
+            document.getElementById('cart-panel').style.display = "none";
         }
 
         function applyVoucher(isUpdatingPrice = false) {
@@ -260,7 +309,6 @@
                     messageElem.textContent = "Na-alis ang discount dahil ang piniling sukat ay umabot o bumaba sa ₱1,000 pababa.";
                 }
             }
-
             computeTotal();
         }
 
@@ -280,34 +328,6 @@
 
         loadProductData();
 
-        // Add to Cart Event Listener
-        document.querySelector('.btn-cart').addEventListener('click', function() {
-            const varSelect = document.getElementById('product-variation');
-            const selectedText = varSelect.options[varSelect.selectedIndex].text;
-            const customerName = document.getElementById('name').value;
-
-            if (!customerName) {
-                alert('Mangyaring ilagay muna ang iyong buong pangalan sa Delivery Details.');
-                document.getElementById('name').focus();
-                return;
-            }
-
-            const cartItem = {
-                product: document.getElementById('display-title').textContent,
-                variation: selectedText,
-                price: currentProductPrice,
-                customer: customerName,
-                date: new Date().toISOString()
-            };
-
-            let cart = JSON.parse(localStorage.getItem('userCart')) || [];
-            cart.push(cartItem);
-            localStorage.setItem('userCart', JSON.stringify(cart));
-
-            alert('Matagumpay na naidagdag sa Cart ang produkto!');
-        });
-
-        // Buy / Checkout Event Listener
         document.getElementById('checkout-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
