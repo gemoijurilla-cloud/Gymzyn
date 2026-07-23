@@ -1,10 +1,18 @@
 [
   {
-    "name": "Pangalan ng Produkto",
-    "desc": "Paglalarawan ng produkto",
-    "image": "link_ng_litrato.jpg",
+    "name": "Side Mirror para sa Motor",
+    "desc": "De-kalidad at malinaw na salamin para sa kaligtasan sa pagmamaneho.",
+    "image": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500",
+    "wholesale": "Available ang wholesale para sa bulk orders (Minimum 5 pcs)",
     "variations": [
-      { "name": "Regular", "price": 500 }
+      {
+        "name": "Carbon Fiber Design",
+        "price": 350
+      },
+      {
+        "name": "Classic Black",
+        "price": 280
+      }
     ]
   }
 ]
