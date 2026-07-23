@@ -224,6 +224,55 @@
             document.getElementById('discount-display').textContent = discountAmount.toFixed(2);
             document.getElementById('shipping-display').textContent = shippingFee.toFixed(2);
             document.getElementById('total-display').textContent = finalTotal.toFixed(2);
+
+            // Function para sa Add to Cart button
+document.querySelector('.btn-cart').addEventListener('click', function() {
+    const varSelect = document.getElementById('product-variation');
+    const selectedText = varSelect.options[varSelect.selectedIndex].text;
+    const customerName = document.getElementById('name').value;
+
+    if (!customerName) {
+        alert('Mangyaring ilagay muna ang iyong buong pangalan sa Delivery Details.');
+        document.getElementById('name').focus();
+        return;
+    }
+
+    // Halimbawa ng pag-save sa localStorage para sa Cart
+    const cartItem = {
+        product: document.getElementById('display-title').textContent,
+        variation: selectedText,
+        price: currentProductPrice,
+        customer: customerName,
+        date: new Date().toISOString()
+    };
+
+    let cart = JSON.parse(localStorage.getItem('userCart')) || [];
+    cart.push(cartItem);
+    localStorage.setItem('userCart', JSON.stringify(cart));
+
+    alert('Matagumpay na naidagdag sa Cart ang produkto!');
+});
+
+// Function para sa Buy / Checkout button
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Pigilan ang pag-refresh ng page
+
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const phone = document.getElementById('phone').value;
+    const totalAmount = document.getElementById('total-display').textContent;
+    const paymentMethod = document.getElementById('payment').value;
+
+    if (!name || !address || !phone) {
+        alert('Mangyaring punan ang lahat ng kinakailangang impormasyon sa Delivery Details.');
+        return;
+    }
+
+    // Mensahe ng tagumpay o pagpapatuloy ng order
+    alert(`Maraming salamat sa iyong order, ${name}!\n\nKabuuang Babayaran: ₱${totalAmount}\nPayment Method: ${paymentMethod.toUpperCase()}\n\nAng iyong order ay naisumite na!`);
+    
+    // Dito mo rin pwedeng idagdag ang code para i-save sa database o i-redirect sa success page
+});
         }
     </script>
 
