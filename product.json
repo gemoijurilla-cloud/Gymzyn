@@ -1,46 +1,36 @@
-{
-  "name": "Gymzyn Moto Parts Item",
-  "desc": "De-kalidad na piyesa ng motor na diretso mula sa aming imbakang-loob.",
-  "wholesale": "Wholesale available: Min. 5 pcs - 10% Off sa Bulk Orders",
-  "voucher": "DISCOUNT10",
-  "variations": [
-    { "name": "Standard Version", "price": 800 },
-    { "name": "Heavy Duty Version", "price": 1250 }
-  ]
-}
-{
-  "name": "Bearing",
-  "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
-  "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
-  "voucher": "DISCOUNT10",
-  "variations": [
-    {
-      "name": "Size 6202",
-      "price": 150
-    },
-    {
-      "name": "Size 6301",
-      "price": 220
-    }
-  ]
-}
-{
-  "name": "Brake Shoe",
-  "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
-  "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
-  "voucher": "DISCOUNT10",
-  "variations": [
-    {
-      "name": "TMX125",
-      "price": 150
-    },
-    {
-      "name": "Click125",
-      "price": 220
-    },
-    {
-      "name": "Sky Go",
-      "price": 240
-    }
-  ]
-}
+[
+  {
+    "name": "Gymzyn Moto Parts Item",
+    "desc": "De-kalidad na piyesa ng motor na diretso mula sa aming imbakang-loob.",
+    "image": "default.jpg",
+    "wholesale": "Wholesale available: Min. 5 pcs - 10% Off sa Bulk Orders",
+    "voucher": "DISCOUNT10",
+    "variations": [
+      { "name": "Standard Version", "price": 800 },
+      { "name": "Heavy Duty Version", "price": 1250 }
+    ]
+  },
+  {
+    "name": "Bearing",
+    "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
+    "image": "bearing.jpg",
+    "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
+    "voucher": "DISCOUNT10",
+    "variations": [
+      { "name": "Size 6202", "price": 150 },
+      { "name": "Size 6301", "price": 220 }
+    ]
+  },
+  {
+    "name": "Brake Shoe",
+    "desc": "High quality steel bearing para sa iba't ibang uri ng makina at motor.",
+    "image": "brakeshoe.jpg",
+    "wholesale": "Wholesale available: Min. 10 pcs - 10% Off sa Bulk Orders",
+    "voucher": "DISCOUNT10",
+    "variations": [
+      { "name": "TMX125", "price": 150 },
+      { "name": "Click125", "price": 220 },
+      { "name": "Sky Go", "price": 240 }
+    ]
+  }
+]
