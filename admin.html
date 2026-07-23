@@ -4,189 +4,190 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Seller Panel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printable-waybill, #printable-waybill * {
-                visibility: visible;
-            }
-            #printable-waybill {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 20px;
-                background: white;
-            }
-            .no-print {
-                display: none !important;
-            }
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        .header-nav h2 { margin: 0; font-size: 20px; }
+        .header-nav div a { margin-left: 15text-decoration: none; font-weight: bold; color: #007BFF; text-decoration: none; }
+        
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        h3 { margin-top: 0; color: #333; }
+        p.subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+        
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #444; }
+        input[type="text"], textarea { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
+        
+        .image-upload-box { border: 2px dashed #ccc; padding: 15px; text-align: center; border-radius: 4px; margin-bottom: 15px; background: #fafafa; }
+        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; margin-top: 10px; display: none; }
+
+        .variation-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+        .variation-row input { margin-bottom: 0; }
+        .btn-remove { background: #d9534f; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-add { background: #5bc0de; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-bottom: 15px; display: inline-block; }
+        
+        .btn-save { background: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%; text-align: center; }
+        .btn-save:hover { background: #45a049; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
 
-    <!-- Navigation / Header -->
-    <nav class="bg-white shadow p-4 flex justify-between items-center no-print">
-        <h1 class="text-xl font-bold text-gray-800">Admin Dashboard - Seller Panel</h1>
-        <div class="flex space-x-4">
-            <button onclick="switchTab('products')" id="nav-products" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Product Manager</button>
-            <button onclick="switchTab('orders')" id="nav-orders" class="text-gray-500 hover:text-blue-600 pb-1">Mga Order & Waybill</button>
-        </div>
-    </nav>
-
-    <div class="container mx-auto mt-6 p-4">
-
-        <!-- TAB 1: PRODUCT MANAGER -->
-        <div id="tab-products" class="tab-content">
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-2xl font-bold mb-2 text-gray-800">Multi-Product Manager</h2>
-                <p class="text-gray-600 mb-6">Dito mo ia-update ang mga sukat, presyo, at detalye ng produkto.</p>
-                
-                <!-- 1. Pangunahing Impormasyon -->
-                <div class="mb-4">
-                    <label class="block font-semibold text-gray-700">Pangalan ng Produkto:</label>
-                    <input type="text" id="prod-name" value="Bearing" class="w-full border p-2 rounded mt-1">
-                </div>
-                <div class="mb-4">
-                    <label class="block font-semibold text-gray-700">Paglalarawan:</label>
-                    <textarea id="prod-desc" class="w-full border p-2 rounded mt-1">High quality steel bearing para sa iba't ibang uri ng makina at motor.</textarea>
-                </div>
-
-                <!-- 2. Variations -->
-                <div class="mb-4">
-                    <label class="block font-semibold text-gray-700 mb-2">Multi-Product Variations (Mga Sukat at Presyo)</label>
-                    <div id="variations-container" class="space-y-2">
-                        <div class="flex space-x-2">
-                            <input type="text" value="Size 6202" class="border p-2 rounded w-2/3">
-                            <input type="text" value="150" class="border p-2 rounded w-1/4">
-                            <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">X</button>
-                        </div>
-                        <div class="flex space-x-2">
-                            <input type="text" value="Size 6301" class="border p-2 rounded w-2/3">
-                            <input type="text" value="220" class="border p-2 rounded w-1/4">
-                            <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">X</button>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-semibold">I-save at I-update ang Produkto</button>
-            </div>
-        </div>
-
-        <!-- TAB 2: MGA ORDER AT WAYBILL -->
-        <div id="tab-orders" class="tab-content hidden">
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Listahan ng mga Order ng Customer at Waybill</h2>
-                
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border border-gray-200">
-                        <thead>
-                            <tr class="bg-gray-100 border-b">
-                                <th class="py-2 px-4 border-r text-left">Order ID</th>
-                                <th class="py-2 px-4 border-r text-left">Pangalan at Address ng Customer</th>
-                                <th class="py-2 px-4 border-r text-left">Detalye ng Produkto</th>
-                                <th class="py-2 px-4 border-r text-left">Kabuuang Presyo</th>
-                                <th class="py-2 px-4 text-left">Aksyon / Waybill</th>
-                            </tr>
-                        </thead>
-                        <tbody id="orders-table-body">
-                            <!-- Halimbawa ng Order -->
-                            <tr class="border-b">
-                                <td class="py-2 px-4 border-r font-semibold">#1001</td>
-                                <td class="py-2 px-4 border-r">Juan Dela Cruz <br><small class="text-gray-500">Brgy. San Jose, Lungsod ng Maynila | 09123456789</small></td>
-                                <td class="py-2 px-4 border-r">Bearing (Size 6202) - 2 pcs</td>
-                                <td class="py-2 px-4 border-r font-bold text-green-600">₱300.00</td>
-                                <td class="py-2 px-4">
-                                    <button onclick="printWaybill('#1001', 'Juan Dela Cruz', 'Brgy. San Jose, Lungsod ng Maynila', '09123456789', 'Bearing (Size 6202) - 2 pcs', '₱300.00')" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
-                                        I-print ang Waybill
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Hidden Printable Waybill Template -->
-    <div id="printable-waybill" class="hidden">
-        <div style="border: 2px dashed #000; padding: 20px; max-width: 400px; margin: 0 auto; font-family: Arial, sans-serif;">
-            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
-                <h2 style="margin: 0; font-size: 20px; font-weight: bold;">GYMZYNSHOP EXPRESS</h2>
-                <p style="margin: 2px 0; font-size: 12px;">Official Shipping Waybill</p>
-            </div>
-            
-            <div style="margin-bottom: 10px;">
-                <p style="margin: 4px 0;"><strong>Order ID:</strong> <span id="wb-order-id"></span></p>
-                <p style="margin: 4px 0;"><strong>Petsa:</strong> <span id="wb-date"></span></p>
-            </div>
-
-            <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 8px 0; margin-bottom: 10px;">
-                <p style="margin: 2px 0; font-size: 12px; color: #555;">MULA SA (Sender):</p>
-                <p style="margin: 2px 0; font-weight: bold;">Gymzyn Seller</p>
-                <p style="margin: 2px 0; font-size: 13px;">Contact: 09XXXXXXXXX</p>
-            </div>
-
-            <div style="background: #f9f9f9; padding: 8px; border: 1px solid #ccc; margin-bottom: 10px;">
-                <p style="margin: 2px 0; font-size: 12px; color: #555;">PARA KAY (Recipient / Customer):</p>
-                <p style="margin: 2px 0; font-size: 16px; font-weight: bold;" id="wb-name"></p>
-                <p style="margin: 2px 0; font-size: 14px;" id="wb-address"></p>
-                <p style="margin: 2px 0; font-size: 14px;" id="wb-phone"></p>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <p style="margin: 2px 0; font-size: 12px; color: #555;">DETALYE NG ITEM:</p>
-                <p style="margin: 2px 0; font-weight: bold;" id="wb-items"></p>
-                <p style="margin: 2px 0; font-size: 14px;"><strong>Total Amount:</strong> <span id="wb-total"></span></p>
-            </div>
-
-            <div style="text-align: center; border-top: 1px dashed #000; padding-top: 10px;">
-                <p style="font-size: 11px; margin: 0;">BarCode / QR Placeholder</p>
-                <div style="font-size: 24px; font-weight: bold; letter-spacing: 2px; margin-top: 5px;" id="wb-barcode">#1001</div>
-            </div>
+    <div class="header-nav">
+        <h2>Admin Dashboard - Seller Panel</h2>
+        <div>
+            <a href="admin.html">Product Manager</a>
+            <a href="orders.html" style="color: #666;">Mga Order & Waybill</a>
         </div>
     </div>
 
-    <!-- JavaScript para sa Tab Switching at Waybill Printing -->
+    <div class="container">
+        <h3>Multi-Product Manager</h3>
+        <p class="subtitle">Dito mo ia-update ang mga sukat, presyo, larawan, at detalye ng produkto.</p>
+
+        <form id="admin-product-form" onsubmit="saveProductData(event)">
+            <label>Pangalan ng Produkto:</label>
+            <input type="text" id="prod-name" placeholder="Halimbawa: Bearing" required>
+
+            <label>Paglalarawan (Description):</label>
+            <textarea id="prod-desc" rows="3" placeholder="Ilarawan ang produkto..." required></textarea>
+
+            <label>Larawan ng Produkto (Upload Image):</label>
+            <div class="image-upload-box">
+                <input type="file" id="prod-image-file" accept="image/*" onchange="previewAndConvertImage(event)">
+                <br>
+                <img id="img-preview" class="image-preview" alt="Preview">
+            </div>
+            <!-- Hidden input para maglaman ng Base64 string -->
+            <input type="hidden" id="prod-image-base64">
+
+            <label>Wholesale / Bulk Info (Opsyonal):</label>
+            <input type="text" id="prod-wholesale" placeholder="Halimbawa: Wholesale: ₱130.00 min. 10 pcs">
+
+            <label>Multi-Product Variations (Mga Sukat at Presyo)</label>
+            <div id="variations-container">
+                <!-- Dito papasok ang variation rows -->
+            </div>
+            <button type="button" class="btn-add" onclick="addVariationRow()">+ Magdagdag ng Variation</button>
+
+            <button type="submit" class="btn-save">I-save at I-update ang Produkto</button>
+        </form>
+    </div>
+
     <script>
-        function switchTab(tabName) {
-            const prodTab = document.getElementById('tab-products');
-            const ordersTab = document.getElementById('tab-orders');
-            const navProd = document.getElementById('nav-products');
-            const navOrders = document.getElementById('nav-orders');
+        let currentImageBase64 = "";
 
-            if (tabName === 'products') {
-                prodTab.classList.remove('hidden');
-                ordersTab.classList.add('hidden');
-                navProd.className = "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1";
-                navOrders.className = "text-gray-500 hover:text-blue-600 pb-1";
-            } else {
-                prodTab.classList.add('hidden');
-                ordersTab.classList.remove('hidden');
-                navOrders.className = "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1";
-                navProd.className = "text-gray-500 hover:text-blue-600 pb-1";
+        // I-load ang unang produkto mula sa products.json kung meron man para ma-edit
+        async function loadExistingProduct() {
+            try {
+                const response = await fetch("products.json");
+                if (response.ok) {
+                    const products = await response.json();
+                    if (products.length > 0) {
+                        const p = products[0]; // Halimbawa ay ang unang produkto ang ita-tally sa admin
+                        document.getElementById('prod-name').value = p.name || "";
+                        document.getElementById('prod-desc').value = p.desc || "";
+                        document.getElementById('prod-wholesale').value = p.wholesale || "";
+                        
+                        if (p.image) {
+                            currentImageBase64 = p.image;
+                            const preview = document.getElementById('img-preview');
+                            preview.src = p.image;
+                            preview.style.display = 'inline-block';
+                            document.getElementById('prod-image-base64').value = p.image;
+                        }
+
+                        const container = document.getElementById('variations-container');
+                        container.innerHTML = "";
+                        if (p.variations && p.variations.length > 0) {
+                            p.variations.forEach(v => {
+                                addVariationRow(v.name, v.price);
+                            });
+                        } else {
+                            addVariationRow("Standard", 0);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log("Walang pamunuang JSON o bago pa lamang.", e);
+                addVariationRow("Size 6202", 150);
+                addVariationRow("Size 6301", 220);
             }
         }
 
-        function printWaybill(orderId, name, address, phone, items, total) {
-            document.getElementById('wb-order-id').innerText = orderId;
-            document.getElementById('wb-date').innerText = new Date().toLocaleDateString();
-            document.getElementById('wb-name').innerText = name;
-            document.getElementById('wb-address').innerText = address;
-            document.getElementById('wb-phone').innerText = phone;
-            document.getElementById('wb-items').innerText = items;
-            document.getElementById('wb-total').innerText = total;
-            document.getElementById('wb-barcode').innerText = orderId;
-
-            window.print();
+        function addVariationRow(name = "", price = "") {
+            const container = document.getElementById('variations-container');
+            const div = document.createElement('div');
+            div.className = "variation-row";
+            div.innerHTML = `
+                <input type="text" placeholder="Pangalan ng Sukat/Uri (Hal. Size 6202)" value="${name}" class="var-name" style="flex: 2;" required>
+                <input type="number" placeholder="Presyo (₱)" value="${price}" class="var-price" style="flex: 1;" step="0.01" required>
+                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">X</button>
+            `;
+            container.appendChild(div);
         }
-    </script>
 
+        // Conversion ng File papuntang Base64
+        function previewAndConvertImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImageBase64 = e.target.result;
+                    document.getElementById('prod-image-base64').value = currentImageBase64;
+                    
+                    const preview = document.getElementById('img-preview');
+                    preview.src = currentImageBase64;
+                    preview.style.display = 'inline-block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProductData(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('prod-name').value;
+            const desc = document.getElementById('prod-desc').value;
+            const wholesale = document.getElementById('prod-wholesale').value;
+            const image = document.getElementById('prod-image-base64').value;
+
+            const varNames = document.querySelectorAll('.var-name');
+            const varPrices = document.querySelectorAll('.var-price');
+            let variations = [];
+
+            for (let i = 0; i < varNames.length; i++) {
+                variations.push({
+                    name: varNames[i].value,
+                    price: parseFloat(varPrices[i].value)
+                });
+            }
+
+            const productData = [{
+                name: name,
+                desc: desc,
+                image: image,
+                wholesale: wholesale,
+                variations: variations
+            }];
+
+            // Dahil static page ang GitHub Pages, ipapakita natin ang JSON code na ito
+            // para ma-copy at ma-paste o ma-download ng admin nang diretso sa products.json file.
+            const jsonString = JSON.stringify(productData, null, 4);
+            
+            // I-download nang automatic ang bagong products.json file para madali itong mai-upload sa GitHub repo
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "products.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            alert("Tagumpay! Na-generate na ang updated 'products.json' na may kasamang larawan at sukat. I-upload lamang ito sa iyong GitHub repository para agad itong lumabas sa product page!");
+        }
+
+        loadExistingProduct();
+    </script>
 </body>
 </html>
