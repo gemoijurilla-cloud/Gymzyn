@@ -111,15 +111,6 @@
             slideIndex++;
             showSlide(slideIndex);
         }
-         // 1. Function para mapalitan ang view ng menu sa kaparehong pahina
-        function showSection(sectionId) {
-            let sections = document.querySelectorAll('.section');
-            sections.forEach(sec => sec.classList.remove('active'));
-            
-            document.getElementById(sectionId).classList.add('active');
-            document.getElementById('errorMsg').innerText = ""; 
-        }
-
         // 2. Function sa pag-verify at direktang pagtawag gamit ang nakasulat sa code
         function validateLogin() {
             let user = document.getElementById('username').value;
