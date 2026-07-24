@@ -3,184 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Seller Panel</title>
+    <title>Mga Order at Waybill - Admin Panel</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
         .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
         .header-nav h2 { margin: 0; font-size: 20px; }
         .header-nav div a { margin-left: 15px; font-weight: bold; color: #007BFF; text-decoration: none; }
         
-        .container { max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
-        h3 { margin-top: 0; color: #333; }
-        p.subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 12px; text-align: left; font-size: 14px; }
+        th { background-color: #333; color: white; }
         
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #444; }
-        input[type="text"], textarea { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
-        
-        .image-upload-box { border: 2px dashed #ccc; padding: 15px; text-align: center; border-radius: 4px; margin-bottom: 15px; background: #fafafa; }
-        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; margin-top: 10px; display: none; }
+        .btn-action { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .btn-waybill { background-color: #ffaa00; color: black; }
+        .btn-clear { background-color: #d9534f; color: white; float: right; }
 
-        .variation-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
-        .variation-row input { margin-bottom: 0; }
-        .btn-remove { background: #d9534f; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-add { background: #5bc0de; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-bottom: 15px; display: inline-block; }
+        /* WAYBILL PRINT FORM STYLES */
+        .waybill-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+        .waybill-box { background: white; width: 450px; padding: 20px; border: 2px solid #000; font-family: 'Courier New', Courier, monospace; }
+        .waybill-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+        .waybill-section { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .waybill-footer { text-align: center; margin-top: 15px; }
         
-        .btn-save { background: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; width: 100%; text-align: center; }
-        .btn-save:hover { background: #45a049; }
+        /* Itago ang UI elements kapag nagpi-print */
+        @media print {
+            body * { visibility: hidden; }
+            #waybill-printable, #waybill-printable * { visibility: visible; }
+            #waybill-printable { position: absolute; left: 0; top: 0; width: 100%; border: 2px solid #000; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="header-nav">
+    <div class="header-nav no-print">
         <h2>Admin Dashboard - Seller Panel</h2>
         <div>
             <a href="index.html" style="color: #28a745;">&larr; Home Page</a>
             <a href="product.html">Product Page</a>
             <a href="admin.html">Product Manager</a>
-            <a href="orders.html" style="color: #666;">Mga Order</a>
+            <a href="orders.html" style="color: #ffaa00;">Mga Order</a>
         </div>
     </div>
 
-    <div class="container">
-        <h3>Multi-Product Manager</h3>
-        <p class="subtitle">Dito mo ia-update ang mga sukat, presyo, larawan, at detalye ng produkto.</p>
+    <div class="container no-print">
+        <h3>Listahan ng mga Order</h3>
+        <button class="btn-action btn-clear" onclick="clearOrders()">I-clear Lahat ng Order</button>
+        <p style="color: #666; font-size: 13px;">Dito makikita ang mga natanggap na order ng Gymzyn Moto Parts.</p>
 
-        <form id="admin-product-form" onsubmit="saveProductData(event)">
-            <label>Pangalan ng Produkto:</label>
-            <input type="text" id="prod-name" placeholder="Halimbawa: Bearing" required>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Pangalan</th>
+                    <th>Telepono / Adres</th>
+                    <th>Item & Presyo</th>
+                    <th>Aksyon</th>
+                </tr>
+            </thead>
+            <tbody id="orders-list">
+                <!-- Dito lilitaw ang mga order sa JavaScript -->
+            </tbody>
+        </table>
+    </div>
 
-            <label>Paglalarawan (Description):</label>
-            <textarea id="prod-desc" rows="3" placeholder="Ilarawan ang produkto..." required></textarea>
-
-            <label>Larawan ng Produkto (Upload Image):</label>
-            <div class="image-upload-box">
-                <input type="file" id="prod-image-file" accept="image/*" onchange="previewAndConvertImage(event)">
-                <br>
-                <img id="img-preview" class="image-preview" alt="Preview">
+    <!-- POPUP WAYBILL MODAL -->
+    <div id="waybillModal" class="waybill-modal">
+        <div class="waybill-box" id="waybill-printable">
+            <div class="waybill-header">
+                <h2>GYMZYN MOTO PARTS</h2>
+                <p>OFFICIAL SHIPPING WAYBILL</p>
             </div>
-            <input type="hidden" id="prod-image-base64">
-
-            <label>Wholesale / Bulk Info (Opsyonal):</label>
-            <input type="text" id="prod-wholesale" placeholder="Halimbawa: Wholesale: ₱130.00 min. 10 pcs">
-
-            <label>Multi-Product Variations (Mga Sukat at Presyo)</label>
-            <div id="variations-container">
+            
+            <div class="waybill-section">
+                <strong>SENDER:</strong><br>
+                Gymzyn Moto Parts Store<br>
+                Contact: 09123456789
             </div>
-            <button type="button" class="btn-add" onclick="addVariationRow()">+ Magdagdag ng Variation</button>
 
-            <button type="submit" class="btn-save">I-save at I-update ang Produkto</button>
-        </form>
+            <div class="waybill-section">
+                <strong>RECIPIENT (TAGATANGGAP):</strong><br>
+                <span id="wb-name">---</span><br>
+                Phone: <span id="wb-phone">---</span><br>
+                Address: <span id="wb-address">---</span>
+            </div>
+
+            <div class="waybill-section">
+                <strong>ORDER DETAILS:</strong><br>
+                Order ID: <span id="wb-id">---</span><br>
+                Item: <span id="wb-item">---</span><br>
+                Amount to Collect (COD): <strong>₱<span id="wb-total">0.00</span></strong>
+            </div>
+
+            <div class="waybill-footer no-print">
+                <button class="btn-action btn-waybill" onclick="window.print()">I-print ang Waybill</button>
+                <button class="btn-action" onclick="closeWaybill()" style="background:#777; color:white;">Isara</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        let currentImageBase64 = "";
+        // Sample orders para sa Testing kung walang pumasok na totoong data
+        const dummyOrders = [
+            { id: "ORD-1001", name: "Juan Dela Cruz", phone: "09991112233", address: "Block 5 Lot 2, Manila", item: "Bearing (Size 6202)", price: 150 },
+            { id: "ORD-1002", name: "Maria Santos", phone: "09882223344", address: "Zone 3, Cebu City", item: "Chain Sprocket Set", price: 450 }
+        ];
 
-        async function loadExistingProduct() {
-            try {
-                const response = await fetch("products.json");
-                if (response.ok) {
-                    const products = await response.json();
-                    if (products.length > 0) {
-                        const p = products[0];
-                        document.getElementById('prod-name').value = p.name || "";
-                        document.getElementById('prod-desc').value = p.desc || "";
-                        document.getElementById('prod-wholesale').value = p.wholesale || "";
-                        
-                        if (p.image) {
-                            currentImageBase64 = p.image;
-                            const preview = document.getElementById('img-preview');
-                            preview.src = p.image;
-                            preview.style.display = 'inline-block';
-                            document.getElementById('prod-image-base64').value = p.image;
-                        }
+        function loadOrders() {
+            // Babasahin ang orders mula sa LocalStorage o gagamit ng dummy data kung walang laman
+            let savedOrders = JSON.parse(localStorage.getItem('gymzyn_orders')) || dummyOrders;
+            const tbody = document.getElementById('orders-list');
+            tbody.innerHTML = "";
 
-                        const container = document.getElementById('variations-container');
-                        container.innerHTML = "";
-                        if (p.variations && p.variations.length > 0) {
-                            p.variations.forEach(v => {
-                                addVariationRow(v.name, v.price);
-                            });
-                        } else {
-                            addVariationRow("Standard", 0);
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log("Walang products.json pa.", e);
-                addVariationRow("Size 6202", 150);
+            if(savedOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Walang nahanap na order.</td></tr>`;
+                return;
+            }
+
+            savedOrders.forEach((order, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${order.id}</strong></td>
+                    <td>${order.name}</td>
+                    <td>${order.phone}<br><small>${order.address}</small></td>
+                    <td>${order.item} - <strong>₱${order.price}</strong></td>
+                    <td>
+                        <button class="btn-action btn-waybill" onclick="generateWaybill(${index})">Waybill</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function generateWaybill(index) {
+            let savedOrders = JSON.parse(localStorage.getItem('gymzyn_orders')) || dummyOrders;
+            const order = savedOrders[index];
+
+            document.getElementById('wb-id').innerText = order.id;
+            document.getElementById('wb-name').innerText = order.name;
+            document.getElementById('wb-phone').innerText = order.phone;
+            document.getElementById('wb-address').innerText = order.address;
+            document.getElementById('wb-item').innerText = order.item;
+            document.getElementById('wb-total').innerText = order.price;
+
+            document.getElementById('waybillModal').style.display = 'flex';
+        }
+
+        function closeWaybill() {
+            document.getElementById('waybillModal').style.display = 'none';
+        }
+
+        function clearOrders() {
+            if(confirm("Sigurado ka bang gusto mong burahin ang lahat ng order?")) {
+                localStorage.removeItem('gymzyn_orders');
+                loadOrders();
             }
         }
 
-        function addVariationRow(name = "", price = "") {
-            const container = document.getElementById('variations-container');
-            const div = document.createElement('div');
-            div.className = "variation-row";
-            div.innerHTML = `
-                <input type="text" placeholder="Pangalan ng Sukat" value="${name}" class="var-name" style="flex: 2;" required>
-                <input type="number" placeholder="Presyo (₱)" value="${price}" class="var-price" style="flex: 1;" step="0.01" required>
-                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">X</button>
-            `;
-            container.appendChild(div);
-        }
-
-        function previewAndConvertImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentImageBase64 = e.target.result;
-                    document.getElementById('prod-image-base64').value = currentImageBase64;
-                    
-                    const preview = document.getElementById('img-preview');
-                    preview.src = currentImageBase64;
-                    preview.style.display = 'inline-block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function saveProductData(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('prod-name').value;
-            const desc = document.getElementById('prod-desc').value;
-            const wholesale = document.getElementById('prod-wholesale').value;
-            const image = document.getElementById('prod-image-base64').value;
-
-            const varNames = document.querySelectorAll('.var-name');
-            const varPrices = document.querySelectorAll('.var-price');
-            let variations = [];
-
-            for (let i = 0; i < varNames.length; i++) {
-                variations.push({
-                    name: varNames[i].value,
-                    price: parseFloat(varPrices[i].value)
-                });
-            }
-
-            const productData = [{
-                name: name,
-                desc: desc,
-                image: image,
-                wholesale: wholesale,
-                variations: variations
-            }];
-
-            const jsonString = JSON.stringify(productData, null, 4);
-            const blob = new Blob([jsonString], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "products.json";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            alert("Tagumpay! Na-download ang 'products.json'. I-upload ito sa iyong GitHub repository.");
-        }
-
-        loadExistingPlugin = loadExistingProduct();
+        // I-load ang mga order sa pagbukas ng page
+        loadOrders();
     </script>
 </body>
 </html>
