@@ -30,5 +30,121 @@
                 "price": 175
             }
         ]
+    },
+    {
+        "name": "Interior",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/sapphire.jpg",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "3.00-17",
+                "price": 220
+            },
+            {
+                "name": "2.75-17",
+                "price": 175
+            }
+        ]
+    },
+    {
+        "name": "Sapphire Tire",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/803.bmp",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "E803 3.00-17",
+                "price": 875
+            },
+            {
+                "name": "E801 2.75-17",
+                "price": 850
+            }
+        ]
+    },
+    {
+        "name": "Scooter Belt",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/Belt.jpg",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "click 125",
+                "price": 450
+            },
+            {
+                "name": "Mio i125",
+                "price": 700
+            }
+        ]
+    },
+    {
+        "name": "CDI",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/CDI.jpg",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "TMX125 Aplha",
+                "price": 450
+            },
+            {
+                "name": "XRM",
+                "price": 375
+            }
+        ]
+    },
+    {
+        "name": "Castrol",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/Castrol.jpg",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "Castro 1L",
+                "price": 250
+            },
+            {
+                "name": "Castrol 800ml",
+                "price": 225
+            }
+        ]
+    },
+    {
+        "name": "Cahin 428H",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/Chain428H.jpg",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "Chain 428H 110L",
+                "price": 285
+            },
+            {
+                "name": "Chain 428H 120L",
+                "price": 335
+	     },
+             {
+                 "name": "Chain 428H 130L
+		 "price": 420
+            }
+        ]
+    },
+    {
+        "name": "Flyball",
+        "desc": "Pwd Lahat na klasi motor",
+        "image": "https://raw.githubusercontent.com/gemoijurilla-cloud/Gymzyn/refs/heads/main/Flyball.jpg",
+        "wholesale": "",
+        "variations": [
+            {
+                "name": "Click 12G",
+                "price": 250
+            },
+            {
+                "name": "Mio i125 12G",
+                "price": 175
+            }
+        ]
     }
 ]
