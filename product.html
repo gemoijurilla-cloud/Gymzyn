@@ -153,7 +153,7 @@
 
         async function loadStoreProducts() {
             try {
-                const response = await fetch("product.json");
+                const response = await fetch("products.json");
                 if (!response.ok) throw new Error("Hindi mabasa ang JSON file.");
                 productsList = await response.json();
                 renderCatalog();
