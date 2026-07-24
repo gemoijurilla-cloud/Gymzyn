@@ -2,7 +2,7 @@
     {
         "name": "Bearing",
         "desc": "Pwd Lahat na klasi motor",
-        "image": "main/Bearing.jpeg",
+        "image": "https://github.com/gemoijurilla-cloud/Gymzyn/blob/main/Bearing.jpg",
         "wholesale": "",
         "variations": [
             {
@@ -18,7 +18,7 @@
     {
         "name": "Brake Shoe",
         "desc": "Pwd Lahat na klasi motor",
-        "image": "main/Brakeshoe.jpg",
+        "image": "https://github.com/gemoijurilla-cloud/Gymzyn/blob/main/Brakeshoe.jpg",
         "wholesale": "",
         "variations": [
             {
