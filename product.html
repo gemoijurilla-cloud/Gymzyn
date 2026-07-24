@@ -159,9 +159,9 @@
                 renderCatalog();
                 updateCartBadge();
             } catch (error) {
-                console.error("Error:", error);
-                document.getElementById('store-container').innerHTML = "<p style='text-align:center; color:red;'>Hindi ma-load ang mga produkto mula sa GitHub.</p>";
-            }
+            console.error("Error:", error);
+            document.getElementById('store-container').innerHTML = `<p style='text-align:center; color:red;'>Error: ${error.message}</p>`;
+        }
         }
 
         function renderCatalog() {
