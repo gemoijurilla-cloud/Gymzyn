@@ -13,7 +13,7 @@
         .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 16px; }
         .nav-links a.login-btn { background: #ffaa00; padding: 8px 15px; border-radius: 4px; color: black; }
 
-        /* Main Content Box - Nilagay na sa Itaas */
+        /* Main Content Box */
         .content-box { width: 95%; max-width: 1300px; margin: 25px auto 15px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; box-sizing: border-box; }
         .content-box h2 { font-size: 28px; color: #222; margin-top: 0; }
         .content-box p { font-size: 16px; color: #555; margin-bottom: 0; }
@@ -41,6 +41,25 @@
         .prev { left: 20px; }
         .next { right: 20px; }
         .prev:hover, .next:hover { background: rgba(0,0,0,0.9); }
+
+        /* Login Section Styling */
+        .login-section {
+            width: 90%;
+            max-width: 400px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .login-section h1 { font-size: 22px; color: #222; margin-bottom: 10px; }
+        .login-section p { font-size: 14px; color: #666; margin-bottom: 20px; }
+        .login-section label { display: block; text-align: left; font-weight: bold; margin-bottom: 5px; color: #333; }
+        .login-section input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .login-section .btn { width: 100%; padding: 10px; background: #ffaa00; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 16px; }
+        .login-section .btn:hover { background: #e69900; }
+        .error { color: red; margin-top: 10px; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -50,17 +69,18 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="product.html">Product</a>
-            <a href="admin.html" class="login-btn">Admin Login</a>
+            <!-- Pinalitan ang href sa #login para mag-scroll pababa papunta sa login box -->
+            <a href="#login" class="login-btn">Admin Login</a>
         </div>
     </div>
 
-    <!-- Welcome Content Box (Nasa Ibabaw na ngayon) -->
+    <!-- Welcome Content Box -->
     <div class="content-box">
         <h2>Maligayang Pagdating sa Gymzyn Moto Parts</h2>
         <p>Ito ang opisyal na pahina ng ating tindahan para sa mga de-kalidad na piyesa ng motor.</p>
     </div>
 
-    <!-- Image Slider / Carousel Section (Nasa Baba na ng text box) -->
+    <!-- Image Slider Section -->
     <div class="slider-container">
         <img class="slide active" src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1300" alt="Motorcycle Parts 1">
         <img class="slide" src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1300" alt="Motorcycle Parts 2">
@@ -69,23 +89,24 @@
         <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
         <button class="next" onclick="changeSlide(1)">&#10095;</button>
     </div>
-    <!-- LOGIN SECTION -->
-        <div id="login" class="section">
-            <h1>Seller Login</h1>
-            <p>Ilagay ang iyong admin credentials para makapasok sa dashboard.</p>
-            
-            <label>Username:</label>
-            <input type="text" id="username" required>
-            
-            <label>Password:</label>
-            <input type="password" id="password" required>
-            
-            <button class="btn" onclick="validateLogin()">OK</button>
-            <div id="errorMsg" class="error"></div>
-        </div>
 
+    <!-- LOGIN SECTION -->
+    <div id="login" class="login-section">
+        <h1>Seller Login</h1>
+        <p>Ilagay ang iyong admin credentials para makapasok sa dashboard.</p>
+        
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Username" required>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Password" required>
+        
+        <button class="btn" onclick="validateLogin()">OK</button>
+        <div id="errorMsg" class="error"></div>
     </div>
+
     <script>
+        // Image Slider Script
         let slideIndex = 0;
         let slideTimer = setInterval(autoSlide, 5000);
 
@@ -111,20 +132,22 @@
             slideIndex++;
             showSlide(slideIndex);
         }
-        // 2. Function sa pag-verify at direktang pagtawag gamit ang nakasulat sa code
+
+        // Login Validation Function
         function validateLogin() {
             let user = document.getElementById('username').value;
             let pass = document.getElementById('password').value;
 
-            // Dito mo direktang itinakda ang Username, Password, at Dashboard Path sa code:
-            let correctUser = "gemoi";       // <-- Palitan ng gusto mong username
-            let correctPass = "gemoi062579";   // <-- Palitan ng gusto mong password
-            let dashboardPath = "admin.html"; // <-- Palitan ng tamang path ng iyong dashboard
+            // Credentials at target page
+            let correctUser = "12345";       
+            let correctPass = "12345";   
+            let dashboardPath = "admin.html"; 
 
             if (user === correctUser && pass === correctPass) {
-                // Ilipat ang pahina patungong admin dashboard
+                // Ipapadala sa admin.html kapag tama
                 window.location.href = dashboardPath;
             } else {
+                // Magpapakita ng error message kapag mali
                 document.getElementById('errorMsg').innerText = "Mali ang username o password!";
             }
         }
