@@ -2,7 +2,7 @@
     {
         "name": "Bearing",
         "desc": "Pwd Lahat na klasi motor",
-        "image": "Gymzyn/Bearing.jpeg",
+        "image": "main/Bearing.jpeg",
         "wholesale": "",
         "variations": [
             {
@@ -18,7 +18,7 @@
     {
         "name": "Brake Shoe",
         "desc": "Pwd Lahat na klasi motor",
-        "image": "Gymzyn/Brakeshoe.jpg",
+        "image": "main/Brakeshoe.jpg",
         "wholesale": "",
         "variations": [
             {
