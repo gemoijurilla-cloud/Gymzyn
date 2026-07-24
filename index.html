@@ -69,7 +69,22 @@
         <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
         <button class="next" onclick="changeSlide(1)">&#10095;</button>
     </div>
+    <!-- LOGIN SECTION -->
+        <div id="login" class="section">
+            <h1>Seller Login</h1>
+            <p>Ilagay ang iyong admin credentials para makapasok sa dashboard.</p>
+            
+            <label>Username:</label>
+            <input type="text" id="username" required>
+            
+            <label>Password:</label>
+            <input type="password" id="password" required>
+            
+            <button class="btn" onclick="validateLogin()">OK</button>
+            <div id="errorMsg" class="error"></div>
+        </div>
 
+    </div>
     <script>
         let slideIndex = 0;
         let slideTimer = setInterval(autoSlide, 5000);
@@ -95,6 +110,32 @@
         function autoSlide() {
             slideIndex++;
             showSlide(slideIndex);
+        }
+         // 1. Function para mapalitan ang view ng menu sa kaparehong pahina
+        function showSection(sectionId) {
+            let sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('errorMsg').innerText = ""; 
+        }
+
+        // 2. Function sa pag-verify at direktang pagtawag gamit ang nakasulat sa code
+        function validateLogin() {
+            let user = document.getElementById('username').value;
+            let pass = document.getElementById('password').value;
+
+            // Dito mo direktang itinakda ang Username, Password, at Dashboard Path sa code:
+            let correctUser = "gemoi";       // <-- Palitan ng gusto mong username
+            let correctPass = "gemoi062579";   // <-- Palitan ng gusto mong password
+            let dashboardPath = "admin.html"; // <-- Palitan ng tamang path ng iyong dashboard
+
+            if (user === correctUser && pass === correctPass) {
+                // Ilipat ang pahina patungong admin dashboard
+                window.location.href = dashboardPath;
+            } else {
+                document.getElementById('errorMsg').innerText = "Mali ang username o password!";
+            }
         }
     </script>
 </body>
